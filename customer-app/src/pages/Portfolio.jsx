@@ -19,7 +19,7 @@ export default function Portfolio() {
 
     {/* Blurred background */}
     <div
-      className="absolute inset-0 z-0 scale-110 bg-cover bg-center blur-"
+      className="absolute inset-0 z-0 scale-110 bg-cover bg-center blur-l"
       style={{
         backgroundImage: "url('/images/background.jpg')",
       }}
