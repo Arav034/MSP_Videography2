@@ -6,17 +6,17 @@ const CONTACT_INFO = [
   {
     icon: Mail,
     label: "Email",
-    value: "hello@mspvideography.com",
+    value: "mspvideograph@gmail.com",
   },
   {
     icon: Phone,
     label: "Phone",
-    value: "+1 (555) 010-2024",
+    value: "+91 8838346319",
   },
   {
     icon: MapPin,
     label: "Studio",
-    value: "24 Harbor Lane, Chennai, TN",
+    value: "10/10E, Vengatesh nagar, Melur, Madurai District, Tamil Nadu - 625106, India.",
   },
   {
     icon: Clock,
