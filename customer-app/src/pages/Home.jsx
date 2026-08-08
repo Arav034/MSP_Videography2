@@ -16,9 +16,6 @@ import SEO from "@/components/common/SEO";
 export default function Home() {
 return (
 <>
-
-
-```
   <Reveal>
     <UrgencyBanner />
   </Reveal>

@@ -33,7 +33,7 @@ export default function Contact() {
       <div
         className="absolute inset-0 z-0 scale-110 bg-cover bg-center blur-l"
         style={{
-          backgroundImage: "url('/images/background.jpg')",
+          backgroundImage: "url('/images/background.png')",
         }}
       />
 
