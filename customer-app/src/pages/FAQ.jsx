@@ -10,14 +10,14 @@ export default function FAQ() {
 
       {/* Blurred background */}
       <div
-        className="absolute inset-0 z-0 scale-110 bg-cover bg-center blur-x"
+        className="absolute inset-0 z-0 scale-110 bg-cover bg-center blur-l"
         style={{
-          backgroundImage: "url('/images/background.jpg')",
+          backgroundImage: "url('/images/background.png')",
         }}
       />
 
       {/* Background overlay */}
-      <div className="absolute inset-0 z-0 bg-white/60" />
+      <div className="absolute inset-0 z-0 bg-white/50" />
 
       {/* Page content */}
       <div className="relative z-10">
@@ -46,19 +46,26 @@ export default function FAQ() {
         </section>
 
         {/* FAQ */}
-        <section className="max-w-3xl mx-auto px-6 md:px-10 pb-24 text-black">
-          {FAQ_CATEGORIES.map((cat) => (
-            <div
-              key={cat.category}
-              className="mb-14 last:mb-0"
-            >
-              <p className="font-mono text-sm md:text-base tracking-widest2 uppercase text-black mb-4">
-                {cat.category}
-              </p>
+        <section className="max-w-3xl mx-auto px-6 md:px-10 pb-24">
 
-              <Accordion items={cat.items} />
-            </div>
-          ))}
+          {/* FAQ Card */}
+         <div className="bg-white/55 backdrop-blur-m border border-white/70 rounded-2xl p-6 md:p-10">
+
+            {FAQ_CATEGORIES.map((cat) => (
+              <div
+                key={cat.category}
+                className="mb-16 last:mb-0"
+              >
+                <p className="font-mono text-sm md:text-base font-bold tracking-widest2 uppercase text-black mb-5">
+                  {cat.category}
+                </p>
+
+                <Accordion items={cat.items} />
+              </div>
+            ))}
+
+          </div>
+
         </section>
 
       </div>
