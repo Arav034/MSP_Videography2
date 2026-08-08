@@ -242,11 +242,13 @@ export default function Footer() {
             />
 
             <p>
-              123 Main street
+              10/10E, Vengatesh nagar,
               <br />
-              Madurai, TN
+              Melur, Madurai District,
               <br />
-              India 625001
+              Tamil Nadu - 625106,
+              <br />
+              India.
             </p>
           </div>
 
@@ -262,7 +264,7 @@ export default function Footer() {
               href="mailto:book@mspvideography.com"
               className="hover:text-white transition-colors"
             >
-              book@mspvideography.com
+            mspvideograph@gmail.com
             </a>
           </div>
 
@@ -278,7 +280,7 @@ export default function Footer() {
               href="tel:+919876543210"
               className="hover:text-white transition-colors"
             >
-              +91 9876543210
+              +91 8838346319
             </a>
           </div>
 

@@ -104,7 +104,7 @@ export default function Contact() {
             </span>
 
             <p className="font-display text-2xl md:text-3xl max-w-xl mx-auto">
-              24 Harbor Lane, Chennai, Tamil Nadu — open by appointment.
+              10/10E, Vengatesh nagar, Melur, Madurai District, Tamil Nadu - 625106, India.
             </p>
 
           </div>
