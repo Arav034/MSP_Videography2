@@ -14,72 +14,58 @@ import Reveal from "@/components/common/Reveal";
 import SEO from "@/components/common/SEO";
 
 export default function Home() {
-  return (
-    <main className="relative min-h-screen overflow-hidden">
+return (
+<>
 
-      {/* Blurred Background */}
-      <div
-        className="absolute inset-0 z-0 scale-110 bg-cover bg-center blur-l"
-        style={{
-          backgroundImage: "url('/images/background.jpg')",
-        }}
-      />
 
-      {/* Background Overlay */}
-      <div className="absolute inset-0 z-0 bg-white/60" />
+```
+  <Reveal>
+    <UrgencyBanner />
+  </Reveal>
 
-      {/* Page Content */}
-      <div className="relative z-10">
+  <Reveal>
+    <Hero />
+  </Reveal>
 
-        <Reveal>
-          <UrgencyBanner />
-        </Reveal>
+  <Reveal>
+    <TrustBar />
+  </Reveal>
 
-        <Reveal>
-          <Hero />
-        </Reveal>
+  <Reveal>
+    <UploadSection />
+  </Reveal>
 
-        <Reveal>
-          <TrustBar />
-        </Reveal>
+  <Reveal>
+    <Intro />
+  </Reveal>
+  
+  <Reveal>
+    <FeaturedWork />
+  </Reveal>
 
-        <Reveal>
-          <UploadSection />
-        </Reveal>
+  {/* <Reveal>
+    <InstagramStrip />
+  </Reveal> */}
 
-        <Reveal>
-          <Intro />
-        </Reveal>
+  <Reveal>
+    <Services />
+  </Reveal>
 
-        <Reveal>
-          <FeaturedWork />
-        </Reveal>
+  <Reveal>
+    <Process />
+  </Reveal>
 
-        {/* <Reveal>
-          <InstagramStrip />
-        </Reveal> */}
+  {/* <Reveal>
+    <Testimonials />
+  </Reveal> */}
 
-        <Reveal>
-          <Services />
-        </Reveal>
+  {/* <Reveal>
+    <FAQTeaser />
+  </Reveal> */}
 
-        <Reveal>
-          <Process />
-        </Reveal>
-
-        {/* <Reveal>
-          <Testimonials />
-        </Reveal> */}
-
-        {/* <Reveal>
-          <FAQTeaser />
-        </Reveal> */}
-{/* 
-        <Reveal>
-          <ClosingCta />
-        </Reveal> */}
-
-      </div>
-    </main>
-  );
+  {/* <Reveal>
+    <ClosingCta />
+  </Reveal> */}
+</>
+);
 }
