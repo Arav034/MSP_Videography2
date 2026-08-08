@@ -6,38 +6,62 @@ import { ROUTES } from "@/constants/routes";
 
 export default function FAQ() {
   return (
-    <>
-      <SEO
-        title="FAQ"
-        description="Frequently asked questions about booking, pricing, editing, delivery, and dubbing at MSP Videography."
-        path="/faq"
+    <main className="relative min-h-screen overflow-hidden">
+
+      {/* Blurred background */}
+      <div
+        className="absolute inset-0 z-0 scale-110 bg-cover bg-center blur"
+        style={{
+          backgroundImage: "url('/images/background.jpg')",
+        }}
       />
 
-      <section className="max-w-4xl mx-auto px-6 md:px-10 pt-24 pb-16 text-center">
-        <span className="eyebrow mb-6">Questions & Answers</span>
-        <h1 className="font-display text-5xl md:text-6xl leading-tight">
-          Frequently Asked Questions
-        </h1>
-        <p className="mt-6 text-steel max-w-lg mx-auto">
-          Everything you need to know about booking, pricing, editing, and
-          dubbing. Can't find your answer?{" "}
-          <Link to={ROUTES.CONTACT} className="text-brand hover:underline">
-            Get in touch
-          </Link>
-          .
-        </p>
-      </section>
+      {/* Background overlay */}
+      <div className="absolute inset-0 z-0 bg-white/60" />
 
-      <section className="max-w-3xl mx-auto px-6 md:px-10 pb-24">
-        {FAQ_CATEGORIES.map((cat) => (
-          <div key={cat.category} className="mb-14 last:mb-0">
-            <p className="font-mono text-xs tracking-widest2 uppercase text-brand mb-4">
-              {cat.category}
-            </p>
-            <Accordion items={cat.items} />
-          </div>
-        ))}
-      </section>
-    </>
+      {/* Page content */}
+      <div className="relative z-10">
+
+        {/* Hero */}
+        <section className="max-w-4xl mx-auto px-6 md:px-10 pt-24 pb-16 text-center">
+          <span className="eyebrow mb-6">
+            Questions & Answers
+          </span>
+
+          <h1 className="font-display text-5xl md:text-6xl leading-tight">
+            Frequently Asked Questions
+          </h1>
+
+          <p className="mt-6 text-steel max-w-lg mx-auto">
+            Everything you need to know about booking, pricing, editing, and
+            dubbing. Can't find your answer?{" "}
+            <Link
+              to={ROUTES.CONTACT}
+              className="text-brand hover:underline"
+            >
+              Get in touch
+            </Link>
+            .
+          </p>
+        </section>
+
+        {/* FAQ */}
+        <section className="max-w-3xl mx-auto px-6 md:px-10 pb-24">
+          {FAQ_CATEGORIES.map((cat) => (
+            <div
+              key={cat.category}
+              className="mb-14 last:mb-0"
+            >
+              <p className="font-mono text-xs tracking-widest2 uppercase text-brand mb-4">
+                {cat.category}
+              </p>
+
+              <Accordion items={cat.items} />
+            </div>
+          ))}
+        </section>
+
+      </div>
+    </main>
   );
 }
