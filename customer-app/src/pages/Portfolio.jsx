@@ -14,24 +14,30 @@ export default function Portfolio() {
     return PORTFOLIO_ITEMS.filter((item) => item.category === activeId);
   }, [activeId]);
 
-  return (
-    <main
-      className="relative min-h-screen overflow-hidden"
+ return (
+  <main className="relative min-h-screen overflow-hidden">
+
+    {/* Blurred background */}
+    <div
+      className="absolute inset-0 z-0 scale-110 bg-cover bg-center blur-"
       style={{
         backgroundImage: "url('/images/background.jpg')",
       }}
-      >
-      <SEO
-        title="Portfolio"
-        description="Browse portraits, weddings, commercial, and film work by MSP Videography."
-        path="/portfolio"
-      />
+    />
+
+    {/* Background overlay */}
+    <div className="absolute inset-0 z-0 bg-white/60" />
+
+    {/* Content */}
+    <div className="relative z-10">
 
       <section className="max-w-4xl mx-auto px-6 md:px-10 pt-24 pb-12 text-center">
         <span className="eyebrow mb-6">Selected Work</span>
+
         <h1 className="font-display text-5xl md:text-6xl leading-tight">
           The Portfolio
         </h1>
+
         <p className="mt-6 text-steel max-w-lg mx-auto">
           A collection of portraits, weddings, commercial work, and film —
           browse by category or view it all.
@@ -60,7 +66,9 @@ export default function Portfolio() {
             ))}
           </div>
         ) : (
-          <p className="text-center text-steel">No work in this category yet.</p>
+          <p className="text-center text-steel">
+            No work in this category yet.
+          </p>
         )}
       </section>
 
@@ -72,6 +80,8 @@ export default function Portfolio() {
           onNavigate={setLightboxIndex}
         />
       )}
-    </main>
-  );
+
+    </div>
+  </main>
+);
 }
