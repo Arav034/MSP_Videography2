@@ -10,7 +10,7 @@ export default function FAQ() {
 
       {/* Blurred background */}
       <div
-        className="absolute inset-0 z-0 scale-110 bg-cover bg-center blur-l"
+        className="absolute inset-0 z-0 scale-110 bg-cover bg-center blur-x"
         style={{
           backgroundImage: "url('/images/background.jpg')",
         }}
@@ -24,7 +24,7 @@ export default function FAQ() {
 
         {/* Hero */}
         <section className="max-w-4xl mx-auto px-6 md:px-10 pt-24 pb-16 text-center">
-          <span className="eyebrow mb-6">
+          <span className="eyebrow mb-6 text-grey">
             Questions & Answers
           </span>
 
@@ -32,7 +32,7 @@ export default function FAQ() {
             Frequently Asked Questions
           </h1>
 
-          <p className="mt-6 text-steel max-w-lg mx-auto">
+          <p className="mt-6 text-grey max-w-lg mx-auto">
             Everything you need to know about booking, pricing, editing, and
             dubbing. Can't find your answer?{" "}
             <Link
@@ -46,7 +46,7 @@ export default function FAQ() {
         </section>
 
         {/* FAQ */}
-        <section className="max-w-3xl mx-auto px-6 md:px-10 pb-24">
+        <section className="max-w-3xl mx-auto px-6 md:px-10 pb-24 text-black">
           {FAQ_CATEGORIES.map((cat) => (
             <div
               key={cat.category}

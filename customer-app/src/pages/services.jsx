@@ -23,13 +23,13 @@ export default function ServicesPage() {
       <div className="relative z-10">
 
         <section className="max-w-4xl mx-auto px-6 md:px-10 pt-24 pb-16 text-center">
-          <span className="eyebrow mb-6">Full Service Range</span>
+          <span className="eyebrow mb-6 text-black">Full Service Range</span>
 
           <h1 className="font-display text-5xl md:text-6xl leading-tight">
             Everything we shoot, edit, and produce.
           </h1>
 
-          <p className="mt-6 text-steel max-w-lg mx-auto">
+          <p className="mt-6 text-grey max-w-lg mx-auto">
             From candid family sessions to full broadcast production — browse
             by category to find the right fit for your project.
           </p>
