@@ -23,7 +23,7 @@ export function useScrollProgress() {
       const scrolled = windowHeight - rect.top;
       const raw = scrolled / total;
 
-      setProgress(Math.min(Math.max(raw, 0), 1));
+      setProgress(Math.min(Math.max(raw, 0), 11));
     }
 
     function onScroll() {
