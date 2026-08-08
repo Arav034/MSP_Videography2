@@ -15,60 +15,71 @@ import SEO from "@/components/common/SEO";
 
 export default function Home() {
   return (
-    <>
-      <SEO
-        title="Photography & Film Studio"
-        description="MSP Videography — portraits, weddings, commercial, and broadcast production. Every frame, composed with intention."
-        path="/"
+    <main className="relative min-h-screen overflow-hidden">
+
+      {/* Blurred Background */}
+      <div
+        className="absolute inset-0 z-0 scale-110 bg-cover bg-center blur-l"
+        style={{
+          backgroundImage: "url('/images/background.jpg')",
+        }}
       />
 
-      <Reveal>
-        <UrgencyBanner />
-      </Reveal>
+      {/* Background Overlay */}
+      <div className="absolute inset-0 z-0 bg-white/60" />
 
-      <Reveal>
-        <Hero />
-      </Reveal>
+      {/* Page Content */}
+      <div className="relative z-10">
 
-      <Reveal>
-        <TrustBar />
-      </Reveal>
+        <Reveal>
+          <UrgencyBanner />
+        </Reveal>
 
-      <Reveal>
-        <UploadSection />
-      </Reveal>
+        <Reveal>
+          <Hero />
+        </Reveal>
 
-      <Reveal>
-        <Intro />
-      </Reveal>
-      
-      <Reveal>
-        <FeaturedWork />
-      </Reveal>
+        <Reveal>
+          <TrustBar />
+        </Reveal>
 
-      {/* <Reveal>
-        <InstagramStrip />
-      </Reveal> */}
+        <Reveal>
+          <UploadSection />
+        </Reveal>
 
-      <Reveal>
-        <Services />
-      </Reveal>
+        <Reveal>
+          <Intro />
+        </Reveal>
 
-      <Reveal>
-        <Process />
-      </Reveal>
+        <Reveal>
+          <FeaturedWork />
+        </Reveal>
 
-      {/* <Reveal>
-        <Testimonials />
-      </Reveal> */}
+        {/* <Reveal>
+          <InstagramStrip />
+        </Reveal> */}
 
-      {/* <Reveal>
-        <FAQTeaser />
-      </Reveal> */}
+        <Reveal>
+          <Services />
+        </Reveal>
 
-      <Reveal>
-        <ClosingCta />
-      </Reveal>
-    </>
+        <Reveal>
+          <Process />
+        </Reveal>
+
+        {/* <Reveal>
+          <Testimonials />
+        </Reveal> */}
+
+        {/* <Reveal>
+          <FAQTeaser />
+        </Reveal> */}
+{/* 
+        <Reveal>
+          <ClosingCta />
+        </Reveal> */}
+
+      </div>
+    </main>
   );
 }

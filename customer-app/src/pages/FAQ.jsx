@@ -52,7 +52,7 @@ export default function FAQ() {
               key={cat.category}
               className="mb-14 last:mb-0"
             >
-              <p className="font-mono text-xs tracking-widest2 uppercase text-brand mb-4">
+              <p className="font-mono text-sm md:text-base tracking-widest2 uppercase text-black mb-4">
                 {cat.category}
               </p>
 
