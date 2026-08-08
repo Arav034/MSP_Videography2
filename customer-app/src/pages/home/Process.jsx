@@ -6,10 +6,10 @@ export default function Process() {
   const [ref, progress] = useScrollProgress();
 
   return (
-    <section ref={ref} className="max-w-7xl mx-auto px-10md:px-10 py-24">
+    <section ref={ref} className="max-w-7xl mx-auto px-6 md:px-10 py-24">
       <div className="text-center mb-16">
         <span className="eyebrow mb-3 block">How It Works</span>
-        <h2 className="font-display text-3xl md:text-5xl">Our Process</h2>
+        <h2 className="font-display text-3xl md:text-4xl">Our Process</h2>
       </div>
 
       {/* Desktop — horizontal fill line */}
