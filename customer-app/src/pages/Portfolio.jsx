@@ -15,7 +15,12 @@ export default function Portfolio() {
   }, [activeId]);
 
   return (
-    <>
+    <main
+      className="relative min-h-screen overflow-hidden"
+      style={{
+        backgroundImage: "url('/images/background.jpg')",
+      }}
+      >
       <SEO
         title="Portfolio"
         description="Browse portraits, weddings, commercial, and film work by MSP Videography."
@@ -67,6 +72,6 @@ export default function Portfolio() {
           onNavigate={setLightboxIndex}
         />
       )}
-    </>
+    </main>
   );
 }
