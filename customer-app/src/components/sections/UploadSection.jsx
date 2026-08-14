@@ -331,7 +331,7 @@ export default function UploadSection() {
                 description="Or click below to browse files from your computer."
                 buttonLabel="Select Footage File"
                 formats={["MP4", "MOV", "MXF", "JPG", "PNG", "TIFF"]}
-                sizeLimit="4K / 8K RAW · Up to 10GB"
+                sizeLimit="4K / 8K RAW"
               />
             </div>
 
@@ -407,13 +407,13 @@ export default function UploadSection() {
 
         {step === STEPS.DUBBING_CHOICE && (
           <div className="mt-14 flex flex-col items-center text-center">
-            <div className="w-14 h-14 flex items-center justify-center bg-brand/10 text-brand mb-6">
+            <div className="w-14 h-14 flex items-center justify-center bg-white/30  text-blue mb-6">
               <Mic size={24} strokeWidth={1.5} />
             </div>
-            <h3 className="font-display text-2xl text-ink mb-3">
+            <h3 className="font-display text-2xl text-white mb-3">
               Do you have dubbing files to add?
             </h3>
-            <p className="text-sm text-steel max-w-sm mb-8">
+            <p className="text-s text-white max-w-sm mb-8">
               If you have a voice-over or dubbing audio track to sync with
               your edit, you can upload it next. This step is optional.
             </p>
@@ -422,7 +422,7 @@ export default function UploadSection() {
               <button
                 type="button"
                 onClick={() => navigate(ROUTES.SERVICE_REQUEST)}
-                className="btn-ghost"
+                className="btn-ghost text-white/90 hover:text-white transition-colors"
               >
                 No, Skip
               </button>
@@ -438,7 +438,7 @@ export default function UploadSection() {
             <button
               type="button"
               onClick={() => setStep(STEPS.MAIN)}
-              className="mt-8 flex items-center gap-2 text-xs text-steel hover:text-brand transition-colors"
+              className="mt-8 flex items-center gap-2 text-x text-white"
             >
               <ArrowLeft size={14} />
               Back to Files
@@ -450,11 +450,11 @@ export default function UploadSection() {
           <div className="mt-10">
             <div className="flex items-center gap-2 mb-4">
               <Mic size={16} className="text-brand" />
-              <p className="font-mono text-xs tracking-widest2 uppercase text-steel">
+              <p className="font-mono text-xs tracking-widest2 uppercase text-white">
                 Dubbing Audio
               </p>
             </div>
-            <p className="text-sm text-steel mb-5">
+            <p className="text-sm text-white mb-5">
               Upload your voice-over or dubbing track and select the language
               for each file.
             </p>
@@ -495,7 +495,7 @@ export default function UploadSection() {
               <button
                 type="button"
                 onClick={() => setStep(STEPS.DUBBING_CHOICE)}
-                className="flex items-center gap-2 text-xs text-steel hover:text-brand transition-colors"
+                className="flex items-center gap-2 text-xs text-white hover:text-brand transition-colors"
               >
                 <ArrowLeft size={14} />
                 Back
