@@ -8,6 +8,9 @@ import { useUpload } from "@/hooks/useUpload";
 import { useRequests } from "@/hooks/useRequests";
 import { BOOKING_SERVICE_OPTIONS } from "@/constants/bookingContent";
 
+//supabase integration
+import { createUpload } from "@/services/uploadService";
+
 // This form is reached via the "Upload for Editing" flow, so only show
 // Editing-category services rather than the full service catalog.
 const EDITING_SERVICE_OPTIONS = BOOKING_SERVICE_OPTIONS.filter(
@@ -27,6 +30,19 @@ const INITIAL_STATE = {
   description: "",
 };
 
+function generateUploadNumber() {
+  const now = new Date();
+
+  const day = String(now.getDate()).padStart(2, "0");
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const year = now.getFullYear();
+
+  // Temporary daily number
+  const count = 1;
+
+  return `${String(count).padStart(2, "0")}${day}${month}${year}`;
+}
+
 export default function ServiceRequest() {
   const { files, clearFiles } = useUpload();
   const { addRequest } = useRequests();
@@ -38,25 +54,70 @@ export default function ServiceRequest() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-const handleSubmit = (e) => {
-    e.preventDefault();
+// const handleSubmit = (e) => {
+//     e.preventDefault();
+//     setSubmitting(true);
+//     // No backend wired yet — files stay in-memory (object URLs) for preview only.
+//     // Once a backend exists, this is where files + form data get uploaded together.
+//     setTimeout(() => {
+//       addRequest({
+//         serviceTitle: form.serviceTitle,
+//         budget: form.budget,
+//         deadline: form.deadline,
+//         description: form.description,
+//         fileCount: files.length,
+//       });
+//       console.log("Service request submitted:", { form, fileCount: files.length });
+//       setSubmitting(false);
+//       setSubmitted(true);
+//       clearFiles();
+//     }, 900);
+//   };
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
     setSubmitting(true);
-    // No backend wired yet — files stay in-memory (object URLs) for preview only.
-    // Once a backend exists, this is where files + form data get uploaded together.
-    setTimeout(() => {
-      addRequest({
-        serviceTitle: form.serviceTitle,
-        budget: form.budget,
-        deadline: form.deadline,
-        description: form.description,
-        fileCount: files.length,
-      });
-      console.log("Service request submitted:", { form, fileCount: files.length });
-      setSubmitting(false);
-      setSubmitted(true);
-      clearFiles();
-    }, 900);
-  };
+
+    const uploadData = {
+      upload_number: `MSP${generateUploadNumber()}`,
+      customer_name: form.name,
+      email: form.email,
+      phone: form.phone,
+
+      service_needed: form.serviceTitle,
+      budget_range: form.budget || null,
+      preferred_deadline: form.deadline || null,
+      project_description: form.description || null,
+
+      upload_status: "Waiting",
+      admin_notes: null,
+    };
+
+
+    const result = await createUpload(uploadData);
+
+    // Keep your existing local request system
+    addRequest({
+      serviceTitle: form.serviceTitle,
+      budget: form.budget,
+      deadline: form.deadline,
+      description: form.description,
+      fileCount: files.length,
+    });
+
+    setSubmitted(true);
+    clearFiles();
+
+  } catch (error) {
+    console.error("Upload request failed:", error);
+    alert("Failed to submit your request. Please try again.");
+
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   if (submitted) {
     return (
