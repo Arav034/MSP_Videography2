@@ -50,6 +50,13 @@ export default function ServiceRequest() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
+  const getTomorrowDate = () => {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  return tomorrow.toISOString().split("T")[0];
+};
+  
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -137,6 +144,8 @@ const handleSubmit = async (e) => {
     );
   }
 
+  
+  
   return (
     <section className="max-w-3xl mx-auto px-6 md:px-10 py-20">
       <div className="text-center mb-12">
@@ -239,9 +248,10 @@ const handleSubmit = async (e) => {
               name="deadline"
               value={form.deadline}
               onChange={handleChange}
+              min={getTomorrowDate()}
               style={{ colorScheme: "light" }}
               className="border border-mist bg-white px-4 py-3 text-sm text-ink
-                         focus:outline-none focus:border-brand transition-colors duration-300"
+                        focus:outline-none focus:border-brand transition-colors duration-300"
             />
           </label>
         </div>
