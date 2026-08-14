@@ -30,18 +30,6 @@ const INITIAL_STATE = {
   description: "",
 };
 
-function generateUploadNumber() {
-  const now = new Date();
-
-  const day = String(now.getDate()).padStart(2, "0");
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const year = now.getFullYear();
-
-  // Temporary daily number
-  const count = 1;
-
-  return `${String(count).padStart(2, "0")}${day}${month}${year}`;
-}
 
 export default function ServiceRequest() {
   const { files, clearFiles } = useUpload();
@@ -88,7 +76,7 @@ const handleSubmit = async (e) => {
     setSubmitting(true);
 
     const uploadData = {
-      upload_number: `MSP${generateUploadNumber()}`,
+  //    upload_number: `MSP${generateUploadNumber()}`,
       customer_name: form.name,
       email: form.email,
       phone: form.phone,
@@ -191,7 +179,34 @@ const handleSubmit = async (e) => {
           <TextField label="Email" name="email" type="email" value={form.email} onChange={handleChange} required />
         </div>
 
-        <TextField label="Phone" name="phone" value={form.phone} onChange={handleChange} required />
+       <TextField
+          label="Phone"
+          name="phone"
+          type="tel"
+          value={form.phone}
+          onChange={(e) => {
+            const value = e.target.value
+              .replace(/\D/g, "")
+              .slice(0, 10);
+
+            setForm((prev) => ({
+              ...prev,
+              phone: value,
+            }));
+          }}
+          required
+          pattern="[0-9]{10}"
+          minLength={10}
+          maxLength={10}
+          placeholder="Enter 10-digit phone number"
+        />
+
+{form.phone.length > 0 &&
+  form.phone.length < 10 && (
+    <p className="text-xs text-red-500 -mt-4">
+      Please enter a valid 10-digit phone number.
+    </p>
+)}
 
         <label className="flex flex-col gap-2">
           <span className="font-mono text-xs tracking-widest2 uppercase text-steel">
