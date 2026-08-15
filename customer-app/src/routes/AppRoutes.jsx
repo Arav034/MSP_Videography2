@@ -3,6 +3,11 @@ import { Routes, Route } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
 import MainLayout from "@/layouts/MainLayout";
 import DashboardLayout from "@/layouts/DashboardLayout";
+
+//new
+import AdminLayout from "@/layouts/AdminLayout";
+import ProtectedRoute from "@/components/admin/ProtectedRoute"; 
+
 import PageLoader from "@/components/common/PageLoader";
 
 const Home = lazy(() => import("@/pages/Home"));
@@ -21,6 +26,14 @@ const Galleries = lazy(() => import("@/pages/dashboard/Galleries"));
 const Invoices = lazy(() => import("@/pages/dashboard/Invoices"));
 const Profile = lazy(() => import("@/pages/dashboard/Profile"));
 const MyRequests = lazy(() => import("@/pages/dashboard/MyRequests"));
+
+// Admin Pages
+const AdminLogin = lazy(() => import("@/pages/admin/AdminLogin"));
+const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard"));
+const AdminUploads = lazy(() => import("@/pages/admin/AdminUploads"));
+const AdminBookings = lazy(() => import("@/pages/admin/AdminBookings"));
+const AdminContacts = lazy(() => import("@/pages/admin/AdminContacts"));
+const AdminSettings = lazy(() => import("@/pages/admin/AdminSettings"));
 
 export default function AppRoutes() {
   return (
@@ -47,6 +60,27 @@ export default function AppRoutes() {
           <Route path={ROUTES.DASHBOARD_REQUESTS} element={<MyRequests />} />
         </Route>
 
+
+        {/* admin route */}
+        <Route path={ROUTES.ADMIN_LOGIN} element={<AdminLogin />} />
+
+        {/* Admin Routes (Protected) */}
+        <Route
+          element={
+            <ProtectedRoute>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path={ROUTES.ADMIN} element={<AdminDashboard />} />
+          <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
+          <Route path={ROUTES.ADMIN_UPLOADS} element={<AdminUploads />} />
+          <Route path={ROUTES.ADMIN_BOOKINGS} element={<AdminBookings />} />
+          <Route path={ROUTES.ADMIN_CONTACTS} element={<AdminContacts />} />
+          <Route path={ROUTES.ADMIN_SETTINGS} element={<AdminSettings />} />
+        </Route>
+        
+        
         <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
       </Routes>
     </Suspense>
