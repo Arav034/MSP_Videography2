@@ -1,11 +1,30 @@
 import { supabase } from "./supabase/supabaseClient";
 
 export async function createBooking(bookingData) {
-  const { error } = await supabase
+  // Generate unique booking number from Supabase
+  const { data: bookingNumber, error: numberError } =
+    await supabase.rpc("generate_booking_number");
+
+  if (numberError) {
+    throw numberError;
+  }
+
+
+  // Add booking number to the booking data
+  const finalBookingData = {
+    ...bookingData,
+    booking_number: bookingNumber,
+  };
+
+  // Insert booking into Supabase
+  const { data, error } = await supabase
     .from("bookings")
-    .insert([bookingData]);
+    .insert([finalBookingData]);
 
-  if (error) throw error;
+  if (error) {
 
-  return true;
+    throw error;
+  }
+
+  return data;
 }
