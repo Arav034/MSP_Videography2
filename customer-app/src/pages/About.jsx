@@ -20,12 +20,14 @@ export default function About() {
       <div
         className="absolute inset-0 z-0 scale-110 bg-cover bg-center blur-l"
         style={{
-          backgroundImage: "url('/images/background2.png')",
+          // backgroundImage: "url('/images/background2.png')",
+                    backgroundImage: "url('/images/image1.png')",
+
         }}
       />
 
       {/* Background Overlay */}
-      <div className="absolute inset-0 z-0 bg-white/60" />
+      <div className="absolute inset-0 z-0 bg-white/40" />
 
       {/* Page Content */}
       <div className="relative z-10">

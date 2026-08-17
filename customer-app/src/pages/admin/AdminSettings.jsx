@@ -105,7 +105,7 @@ export default function AdminSettings() {
             />
           </div>
 
-          <div>
+          {/* <div>
             <label className="block text-xs sm:text-sm font-medium text-gray-600 mb-1">
               User ID
             </label>
@@ -115,7 +115,7 @@ export default function AdminSettings() {
               disabled
               className="w-full px-3 sm:px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-charcoal text-xs font-mono overflow-x-auto"
             />
-          </div>
+          </div> */}
 
           <div>
             <label className="block text-xs sm:text-sm font-medium text-gray-600 mb-1">
@@ -305,7 +305,9 @@ export default function AdminSettings() {
           <LogOut size={18} />
           Logout
         </button>
+        
       </div>
+      <p className="font-medium text-charcoal margin">Built by Aravinth</p>
     </div>
   );
 }
