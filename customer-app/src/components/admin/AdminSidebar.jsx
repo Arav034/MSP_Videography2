@@ -102,7 +102,7 @@ export default function AdminSidebar({ isOpen, toggleSidebar }) {
         <div className="p-4 border-t border-gray-200">
           <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
             <div className="w-10 h-10 bg-msp-blue rounded-full flex items-center justify-center text-white font-bold text-sm">
-              A
+              <img src="../images/splash-logo.jpg" class="rounded"></img>
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-charcoal truncate">
