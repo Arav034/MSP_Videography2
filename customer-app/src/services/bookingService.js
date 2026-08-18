@@ -29,9 +29,44 @@
 //   return data;
 // }
 
+// import { supabase } from "./supabase/supabaseClient";
+
+// export async function createBooking(bookingData) {
+//   const { data: bookingNumber, error: numberError } =
+//     await supabase.rpc("generate_booking_number");
+
+//   if (numberError) {
+//     console.error("BOOKING NUMBER ERROR:", numberError);
+//     throw numberError;
+//   }
+
+//   console.log("Generated booking number:", bookingNumber);
+
+//   const finalBookingData = {
+//     ...bookingData,
+//     booking_number: bookingNumber,
+//   };
+
+//   console.log("FINAL BOOKING DATA:", finalBookingData);
+
+//   const { data, error } = await supabase
+//     .from("bookings")
+//     .insert([finalBookingData]);
+
+//   if (error) {
+//     console.error("BOOKING INSERT ERROR:", error);
+//     throw error;
+//   }
+
+//   return data;
+// }
+
+
+
 import { supabase } from "./supabase/supabaseClient";
 
 export async function createBooking(bookingData) {
+  // Generate booking number
   const { data: bookingNumber, error: numberError } =
     await supabase.rpc("generate_booking_number");
 
@@ -49,7 +84,8 @@ export async function createBooking(bookingData) {
 
   console.log("FINAL BOOKING DATA:", finalBookingData);
 
-  const { data, error } = await supabase
+  // Insert booking — no SELECT required
+  const { error } = await supabase
     .from("bookings")
     .insert([finalBookingData]);
 
@@ -58,5 +94,8 @@ export async function createBooking(bookingData) {
     throw error;
   }
 
-  return data;
+  return {
+    success: true,
+    bookingNumber,
+  };
 }
