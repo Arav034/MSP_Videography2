@@ -325,8 +325,6 @@ const handleSubmit = async (e) => {
 
     const uploadNumber = result.uploadNumber;
 
-    console.log("✅ Upload created:", uploadNumber);
-
     // ============================================
     // 2. UPLOAD FILES TO CLOUDFLARE R2
     // ============================================
@@ -337,10 +335,6 @@ const handleSubmit = async (e) => {
         throw new Error("Invalid file selected");
       }
 
-      console.log(
-        "📤 Uploading file:",
-        actualFile.name
-      );
 
       const uploadResult =
         await r2Service.uploadFile(
@@ -354,11 +348,6 @@ const handleSubmit = async (e) => {
             `Failed to upload ${actualFile.name}`
         );
       }
-
-      console.log(
-        "✅ Uploaded:",
-        actualFile.name
-      );
     }
 
     // ============================================
@@ -384,11 +373,6 @@ const handleSubmit = async (e) => {
     clearFiles();
 
   } catch (error) {
-    console.error(
-      "❌ Upload request failed:",
-      error
-    );
-
     alert(
       error.message ||
         "Failed to submit your request. Please try again."
