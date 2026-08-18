@@ -62,30 +62,60 @@
 //   };
 // }
 
+//new prev
 
+// import { supabase } from "./supabase/supabaseClient";
+
+// export async function createUpload(uploadData) {
+
+//   // Upload number is generated in ServiceRequest.jsx
+//   // and passed here through uploadData.
+
+//   const {
+//     data,
+//     error,
+//   } = await supabase
+//     .from("uploads")
+//     .insert([uploadData])
+//   if (error) {
+
+//     throw error;
+//   }
+
+
+//   return {
+//     data,
+//     uploadNumber: data.upload_number,
+//   };
+// }
 
 import { supabase } from "./supabase/supabaseClient";
 
 export async function createUpload(uploadData) {
+  const { data: uploadNumber, error: numberError } =
+    await supabase.rpc("generate_upload_number");
 
-  // Upload number is generated in ServiceRequest.jsx
-  // and passed here through uploadData.
+  if (numberError) {
+    console.error("UPLOAD NUMBER ERROR:", numberError);
+    throw numberError;
+  }
 
-  const {
-    data,
-    error,
-  } = await supabase
+  const finalUploadData = {
+    ...uploadData,
+    upload_number: uploadNumber,
+  };
+
+  const { error } = await supabase
     .from("uploads")
-    .insert([uploadData])
+    .insert([finalUploadData]);
 
   if (error) {
-
+    console.error("UPLOAD INSERT ERROR:", error);
     throw error;
   }
 
-
   return {
-    data,
-    uploadNumber: data.upload_number,
+    success: true,
+    uploadNumber,
   };
 }
