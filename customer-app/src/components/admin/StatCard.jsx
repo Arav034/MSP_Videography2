@@ -1,10 +1,10 @@
-import { Upload, Calendar, Mail, AlertCircle } from "lucide-react";
+import { Upload, Calendar, Mail, ArrowBigUp} from "lucide-react";
 
 const iconMap = {
   Upload,
   Calendar,
   Mail,
-  AlertCircle,
+  ArrowBigUp,
 };
 
 export default function StatCard({ title, value, trend, icon }) {

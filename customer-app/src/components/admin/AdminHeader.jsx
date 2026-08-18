@@ -62,7 +62,7 @@ export default function AdminHeader({ toggleSidebar, isSidebarOpen }) {
               className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <div className="w-8 h-8 bg-msp-blue rounded-full flex items-center justify-center text-white text-sm font-bold">
-                <img src="../images/splash-logo.jpg" class="rounded"></img>
+                <img src="../images/splash-logo.jpg" className="rounded"></img>
               </div>
               <span className="hidden sm:block text-sm font-medium text-charcoal">
                 Admin

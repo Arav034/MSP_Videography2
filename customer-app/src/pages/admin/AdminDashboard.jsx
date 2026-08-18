@@ -86,11 +86,18 @@ export default function AdminDashboard() {
           trend="+5% this month"
           icon="Mail"
         />
-        <StatCard
+        {/* <StatCard
           title="Pending Uploads"
           value={stats.pendingUploads}
           trend="Requires attention"
           icon="AlertCircle"
+        /> */}
+        <StatCard
+          title="Total Earnings"
+          // value={stats.pendingUploads}
+          value={100000}
+          trend="Income"
+          icon="ArrowBigUp"
         />
       </div>
 
