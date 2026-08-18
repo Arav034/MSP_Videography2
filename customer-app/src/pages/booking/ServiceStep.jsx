@@ -22,7 +22,6 @@ export default function ServiceStep({ value, onChange, onNext }) {
   return (
     <div>
       <p className="eyebrow mb-2 text-center">Step 1 of 4</p>
-
       {!activeCategory ? (
         <>
           <h2 className="font-display text-3xl text-center mb-10">

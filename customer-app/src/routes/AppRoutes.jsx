@@ -7,6 +7,7 @@ import DashboardLayout from "@/layouts/DashboardLayout";
 //new
 import AdminLayout from "@/layouts/AdminLayout";
 import ProtectedRoute from "@/components/admin/ProtectedRoute"; 
+import Payment from "@/pages/Payment";
 
 import PageLoader from "@/components/common/PageLoader";
 
@@ -49,6 +50,7 @@ export default function AppRoutes() {
           <Route path={ROUTES.LOGIN} element={<Login />} />
           <Route path={ROUTES.SERVICE_REQUEST} element={<ServiceRequest />} />
           <Route path={ROUTES.BOOK} element={<Book />} />
+          <Route path="/payment" element={<Payment />} />
         </Route>
 
         <Route element={<DashboardLayout />}>

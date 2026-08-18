@@ -8,7 +8,7 @@ import Confirmation from "@/pages/booking/Confirmation";
 import { useMultiStepForm } from "@/hooks/useMultiStepForm";
 import SEO from "@/components/common/SEO";
 import { createBooking } from "@/services/bookingService";
-
+import { useNavigate } from "react-router-dom";
 const STEP_LABELS = ["Service", "Date & Time", "Details", "Review"];
 
 export default function Book() {
@@ -20,7 +20,7 @@ export default function Book() {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [details, setDetails] = useState({ name: "", email: "", phone: "", notes: "" });
-
+  const navigate = useNavigate();
 const [bookingTotal, setBookingTotal] = useState(null);
 
 const handleConfirm = async ({ total, coupon }) => {
@@ -94,7 +94,16 @@ if (submitted) {
         description="Book your photography or videography session with MSP Videography."
         path="/book"
       />
-
+      <p className="text-base text-gray-600 mt-2 leading-relaxed">
+            If you have already completed your booking and are waiting to make the payment,
+            click the Pay Now button to continue.
+          </p>
+      <button
+        onClick={() => navigate("/payment")}
+        className="px-6 py-3 mb-[10px] bg-msp-blue bg-blue-400 text-white rounded-lg font-semibold transition-colors"
+      >
+        Pay Now
+      </button>
       <div className="mb-14">
         <StepIndicator labels={STEP_LABELS} currentIndex={currentStepIndex} />
       </div>
