@@ -17,7 +17,12 @@ export default function BookingDetailsDrawer({
   const [uploadStatus, setUploadStatus] = useState(booking.upload_status);
   const [isLoading, setIsLoading] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
-
+  
+  //new 
+  const [finalAmount, setFinalAmount] = useState(
+  booking.total_amount ?? ""
+);
+  
   if (!isOpen) return null;
 
   const handleSave = async () => {
@@ -179,7 +184,7 @@ export default function BookingDetailsDrawer({
           </div>
 
           {/* Status Management */}
-          {isEditing ? (
+          {/* {isEditing ? (
             <div>
               <h3 className="text-lg font-bold text-charcoal mb-4">
                 Update Status
@@ -246,6 +251,118 @@ export default function BookingDetailsDrawer({
                 </div>
               </div>
             </div>
+          ) : ( */}
+          {isEditing ? (
+  <div>
+    <h3 className="text-lg font-bold text-charcoal mb-4">
+      Edit Details
+    </h3>
+
+    <div className="bg-gray-50 rounded-lg p-4 sm:p-5 space-y-5">
+
+      {/* Final Amount */}
+      <div>
+        <label className="block text-sm font-medium text-gray-600 mb-2">
+          Final Payment Amount
+        </label>
+
+        <div className="relative">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">
+            ₹
+          </span>
+
+          <input
+            type="number"
+            min="0"
+            value={finalAmount}
+            onChange={(e) => setFinalAmount(e.target.value)}
+            placeholder="Enter final amount"
+            className="w-full pl-8 pr-3 py-3 border border-gray-300 rounded-lg
+                       focus:outline-none focus:ring-2 focus:ring-msp-blue
+                       text-sm sm:text-base"
+          />
+        </div>
+      </div>
+
+      {/* Payment Status */}
+      <div>
+        <label className="block text-sm font-medium text-gray-600 mb-2">
+          Payment Status
+        </label>
+
+        <select
+          value={paymentStatus}
+          onChange={(e) => setPaymentStatus(e.target.value)}
+          className="w-full min-h-[44px] px-3 py-3 border border-gray-300
+                     rounded-lg bg-white text-sm sm:text-base
+                     focus:outline-none focus:ring-2 focus:ring-msp-blue"
+        >
+          <option value="Pending">Pending</option>
+          <option value="Paid">Paid</option>
+          <option value="Failed">Failed</option>
+          <option value="Refunded">Refunded</option>
+        </select>
+      </div>
+
+      {/* Booking Status */}
+      <div>
+        <label className="block text-sm font-medium text-gray-600 mb-2">
+          Booking Status
+        </label>
+
+        <select
+          value={bookingStatus}
+          onChange={(e) => setBookingStatus(e.target.value)}
+          className="w-full min-h-[44px] px-3 py-3 border border-gray-300
+                     rounded-lg bg-white text-sm sm:text-base
+                     focus:outline-none focus:ring-2 focus:ring-msp-blue"
+        >
+          <option value="Pending">Pending</option>
+          <option value="Confirmed">Confirmed</option>
+          <option value="Completed">Completed</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      {/* Upload Status */}
+      <div>
+        <label className="block text-sm font-medium text-gray-600 mb-2">
+          Upload Status
+        </label>
+
+        <select
+          value={uploadStatus}
+          onChange={(e) => setUploadStatus(e.target.value)}
+          className="w-full min-h-[44px] px-3 py-3 border border-gray-300
+                     rounded-lg bg-white text-sm sm:text-base
+                     focus:outline-none focus:ring-2 focus:ring-msp-blue"
+        >
+          <option value="Waiting">Waiting</option>
+          <option value="Processing">Processing</option>
+          <option value="Completed">Completed</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      {/* Admin Notes */}
+      <div>
+        <label className="block text-sm font-medium text-gray-600 mb-2">
+          Admin Notes
+        </label>
+
+        <textarea
+          value={adminNotes}
+          onChange={(e) => setAdminNotes(e.target.value)}
+          rows={4}
+          className="w-full px-3 py-3 border border-gray-300 rounded-lg
+                     bg-white text-sm sm:text-base resize-y
+                     focus:outline-none focus:ring-2 focus:ring-msp-blue"
+          placeholder="Add any notes..."
+        />
+      </div>
+
+    </div>
+  </div>
           ) : (
             <div>
               <h3 className="text-lg font-bold text-charcoal mb-4">
@@ -350,7 +467,7 @@ export default function BookingDetailsDrawer({
               >
                 {isLoading ? "Saving..." : "Save Changes"}
               </button>
-              <button
+              {/* <button
                 onClick={() => {
                   setIsEditing(false);
                   setAdminNotes(booking.admin_notes || "");
@@ -359,6 +476,23 @@ export default function BookingDetailsDrawer({
                   setUploadStatus(booking.upload_status);
                 }}
                 className="w-full px-4 py-2 border border-gray-300 hover:bg-gray-50 text-charcoal rounded-lg font-medium transition-colors"
+              >
+                Cancel
+              </button> */}
+              
+              <button
+                onClick={() => {
+                  setIsEditing(false);
+                  setAdminNotes(booking.admin_notes || "");
+                  setPaymentStatus(booking.payment_status);
+                  setBookingStatus(booking.booking_status);
+                  setUploadStatus(booking.upload_status);
+                  setFinalAmount(booking.total_amount ?? "");
+                }}
+                className="w-full min-h-[46px] px-4 py-3
+                          border border-gray-300 hover:bg-gray-50
+                          text-charcoal rounded-lg font-medium
+                          transition-colors text-sm sm:text-base"
               >
                 Cancel
               </button>
