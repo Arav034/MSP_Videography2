@@ -115,28 +115,173 @@ export default function ServiceRequest() {
 //     setSubmitting(false);
 //   }
 // };
-const generateUploadNumber = () => {
-  const today = new Date();
 
-  const day = String(today.getDate()).padStart(2, "0");
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-  const year = today.getFullYear();
+// const generateUploadNumber = () => {
+//   const today = new Date();
 
-  // Daily counter stored in browser
-  const dateKey = `${day}${month}${year}`;
-  const storageKey = `msp_upload_count_${dateKey}`;
+//   const day = String(today.getDate()).padStart(2, "0");
+//   const month = String(today.getMonth() + 1).padStart(2, "0");
+//   const year = today.getFullYear();
 
-  const currentCount =
-    Number(localStorage.getItem(storageKey)) || 0;
+//   // Daily counter stored in browser
+//   const dateKey = `${day}${month}${year}`;
+//   const storageKey = `msp_upload_count_${dateKey}`;
 
-  const nextCount = currentCount + 1;
+//   const currentCount =
+//     Number(localStorage.getItem(storageKey)) || 0;
 
-  localStorage.setItem(storageKey, nextCount);
+//   const nextCount = currentCount + 1;
 
-  const count = String(nextCount).padStart(3, "0");
+//   localStorage.setItem(storageKey, nextCount);
 
-  return `${count}${dateKey}`;
-};
+//   const count = String(nextCount).padStart(3, "0");
+
+//   return `${count}${dateKey}`;
+// };
+
+// const handleSubmit = async (e) => {
+//   e.preventDefault();
+
+//   try {
+//     setSubmitting(true);
+
+//     // Generate one upload number for this request
+//    // const uploadNumber = `MSP${generateUploadNumber()}`;
+
+
+//     // 1. Upload selected files to Cloudflare R2
+//     for (const fileItem of files) {
+//       // Supports both { file: File } and direct File objects
+//       const actualFile = fileItem.file || fileItem;
+
+//       if (!actualFile) {
+//         throw new Error("Invalid file selected");
+//       }
+
+//       const uploadResult = await r2Service.uploadFile(
+//         actualFile,
+//         uploadNumber
+//       );
+
+//       if (!uploadResult.success) {
+//         throw new Error(
+//           uploadResult.error ||
+//           `Failed to upload ${actualFile.name}`
+//         );
+//       }
+//     }
+
+//     // 2. Save request details to Supabase
+//     const uploadData = {
+//       // upload_number: uploadNumber,
+
+//       customer_name: form.name,
+//       email: form.email,
+//       phone: form.phone,
+
+//       service_needed: form.serviceTitle,
+//       budget_range: form.budget || null,
+//       preferred_deadline: form.deadline || null,
+//       project_description: form.description || null,
+
+//       upload_status: "Waiting",
+//       admin_notes: null,
+//     };
+
+//     const result = await createUpload(uploadData);
+
+//     // 3. Keep your existing local request system
+//     addRequest({
+//       serviceTitle: form.serviceTitle,
+//       budget: form.budget,
+//       deadline: form.deadline,
+//       description: form.description,
+//       fileCount: files.length,
+//     });
+
+//     // 4. Show success
+//     setSubmitted(true);
+//     clearFiles();
+
+//   } catch (error) {
+//     alert(
+//       error.message ||
+//       "Failed to submit your request. Please try again."
+//     );
+
+//   } finally {
+//     setSubmitting(false);
+//   }
+// };
+
+// const handleSubmit = async (e) => {
+//   e.preventDefault();
+
+//   try {
+//     setSubmitting(true);
+
+//     // Generate a temporary ID for file organization in R2
+//     const tempId = `CUSTOMER_${Date.now()}`;
+
+//     // 1. Upload selected files to Cloudflare R2
+//     for (const fileItem of files) {
+//       const actualFile = fileItem.file || fileItem;
+
+//       if (!actualFile) {
+//         throw new Error("Invalid file selected");
+//       }
+
+//       const uploadResult = await r2Service.uploadFile(
+//         actualFile,
+//         tempId  // ✅ Use tempId instead of uploadNumber
+//       );
+
+//       if (!uploadResult.success) {
+//         throw new Error(
+//           uploadResult.error ||
+//           `Failed to upload ${actualFile.name}`
+//         );
+//       }
+//     }
+
+//     // 2. Save request details to Supabase
+//     const uploadData = {
+//       // ✅ REMOVED: upload_number - Supabase generates it
+//       customer_name: form.name,
+//       email: form.email,
+//       phone: form.phone,
+//       service_needed: form.serviceTitle,
+//       budget_range: form.budget || null,
+//       preferred_deadline: form.deadline || null,
+//       project_description: form.description || null,
+//       upload_status: "Waiting",
+//       admin_notes: null,
+//     };
+
+//     const result = await createUpload(uploadData);
+
+//     // 3. Keep your existing local request system
+//     addRequest({
+//       serviceTitle: form.serviceTitle,
+//       budget: form.budget,
+//       deadline: form.deadline,
+//       description: form.description,
+//       fileCount: files.length,
+//     });
+
+//     // 4. Show success
+//     setSubmitted(true);
+//     clearFiles();
+
+//   } catch (error) {
+//     alert(
+//       error.message ||
+//       "Failed to submit your request. Please try again."
+//     );
+//   } finally {
+//     setSubmitting(false);
+//   }
+// };
 
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -144,52 +289,76 @@ const handleSubmit = async (e) => {
   try {
     setSubmitting(true);
 
-    // Generate one upload number for this request
-    const uploadNumber = `MSP${generateUploadNumber()}`;
-
-
-    // 1. Upload selected files to Cloudflare R2
-    for (const fileItem of files) {
-      // Supports both { file: File } and direct File objects
-      const actualFile = fileItem.file || fileItem;
-
-      if (!actualFile) {
-        throw new Error("Invalid file selected");
-      }
-
-      const uploadResult = await r2Service.uploadFile(
-        actualFile,
-        uploadNumber
-      );
-
-      if (!uploadResult.success) {
-        throw new Error(
-          uploadResult.error ||
-          `Failed to upload ${actualFile.name}`
-        );
-      }
-    }
-
-    // 2. Save request details to Supabase
+    // ============================================
+    // 1. CREATE UPLOAD REQUEST IN SUPABASE
+    // ============================================
     const uploadData = {
-      upload_number: uploadNumber,
-
       customer_name: form.name,
       email: form.email,
       phone: form.phone,
-
       service_needed: form.serviceTitle,
       budget_range: form.budget || null,
       preferred_deadline: form.deadline || null,
       project_description: form.description || null,
-
       upload_status: "Waiting",
       admin_notes: null,
     };
 
     const result = await createUpload(uploadData);
 
-    // 3. Keep your existing local request system
+    // createUpload must return the created row
+    const createdUpload = result?.data || result;
+
+    if (!createdUpload?.upload_number) {
+      throw new Error(
+        "Upload number was not generated by Supabase."
+      );
+    }
+
+    const uploadNumber = createdUpload.upload_number;
+
+    console.log(
+      "✅ Upload created:",
+      uploadNumber
+    );
+
+    // ============================================
+    // 2. UPLOAD FILES TO CLOUDFLARE R2
+    // ============================================
+    for (const fileItem of files) {
+      const actualFile = fileItem.file || fileItem;
+
+      if (!actualFile) {
+        throw new Error("Invalid file selected");
+      }
+
+      console.log(
+        "📤 Uploading file:",
+        actualFile.name
+      );
+
+      const uploadResult =
+        await r2Service.uploadFile(
+          actualFile,
+          uploadNumber
+        );
+
+      if (!uploadResult?.success) {
+        throw new Error(
+          uploadResult?.error ||
+            `Failed to upload ${actualFile.name}`
+        );
+      }
+
+      console.log(
+        "✅ Uploaded:",
+        actualFile.name
+      );
+    }
+
+    // ============================================
+    // 3. KEEP EXISTING LOCAL REQUEST SYSTEM
+    // ============================================
     addRequest({
       serviceTitle: form.serviceTitle,
       budget: form.budget,
@@ -198,14 +367,26 @@ const handleSubmit = async (e) => {
       fileCount: files.length,
     });
 
-    // 4. Show success
+    // ============================================
+    // 4. SUCCESS
+    // ============================================
+    console.log(
+      "✅ Service request completed:",
+      uploadNumber
+    );
+
     setSubmitted(true);
     clearFiles();
 
   } catch (error) {
+    console.error(
+      "❌ Upload request failed:",
+      error
+    );
+
     alert(
       error.message ||
-      "Failed to submit your request. Please try again."
+        "Failed to submit your request. Please try again."
     );
 
   } finally {
