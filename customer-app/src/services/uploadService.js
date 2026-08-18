@@ -77,8 +77,6 @@ export async function createUpload(uploadData) {
   } = await supabase
     .from("uploads")
     .insert([uploadData])
-    .select()
-    .single();
 
   if (error) {
 
