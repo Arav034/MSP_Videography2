@@ -1,4 +1,6 @@
-import { useState } from "react";
+//1. import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import { X } from "lucide-react";
 import { supabase } from "@/services/supabase/supabaseClient";
 import AdminPasswordModal from "./AdminPasswordModal";
@@ -22,39 +24,134 @@ export default function BookingDetailsDrawer({
   const [finalAmount, setFinalAmount] = useState(
   booking.total_amount ?? ""
 );
-  
+  //2
+  useEffect(() => {
+    if (!booking) return;
+
+    setAdminNotes(booking.admin_notes || "");
+    setPaymentStatus(booking.payment_status || "Pending");
+    setBookingStatus(booking.booking_status || "Pending");
+    setUploadStatus(booking.upload_status || "Waiting");
+    setFinalAmount(booking.total_amount ?? "");
+  }, [booking]);
+    
   if (!isOpen) return null;
 
   const handleSave = async () => {
     setShowPasswordModal(true);
   };
 
-  const handlePasswordVerified = async () => {
-    try {
-      setIsLoading(true);
-      const { error } = await supabase
-        .from("bookings")
-        .update({
-          payment_status: paymentStatus,
-          booking_status: bookingStatus,
-          upload_status: uploadStatus,
-          admin_notes: adminNotes,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", booking.id);
+  // const handlePasswordVerified = async () => {
+  //   try {
+  //     setIsLoading(true);
+  //     const { error } = await supabase
+  //       .from("bookings")
+  //       .update({
+  //         payment_status: paymentStatus,
+  //         booking_status: bookingStatus,
+  //         upload_status: uploadStatus,
+  //         admin_notes: adminNotes,
+  //         updated_at: new Date().toISOString(),
+  //       })
+  //       .eq("id", booking.id);
 
-      if (error) throw error;
+  //     if (error) throw error;
 
-      setShowPasswordModal(false);
-      setIsEditing(false);
-      onUpdate();
-    } catch (error) {
-      console.error("Error updating booking:", error);
-    } finally {
-      setIsLoading(false);
+  //     setShowPasswordModal(false);
+  //     setIsEditing(false);
+  //     onUpdate();
+  //   } catch (error) {
+  //     console.error("Error updating booking:", error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+//   const handlePasswordVerified = async () => {
+//   try {
+//     setIsLoading(true);
+
+//     const { error } = await supabase
+//       .from("bookings")
+//       .update({
+//         total_amount: Number(finalAmount),
+//         payment_status: paymentStatus,
+//         booking_status: bookingStatus,
+//         upload_status: uploadStatus,
+//         admin_notes: adminNotes,
+//         updated_at: new Date().toISOString(),
+//       })
+//       .eq("id", booking.id);
+
+//     if (error) throw error;
+
+//     setShowPasswordModal(false);
+//     setIsEditing(false);
+
+//     // Tell parent to reload the booking data
+//     onUpdate();
+//   } catch (error) {
+//     console.error("Error updating booking:", error);
+//   } finally {
+//     setIsLoading(false);
+//   }
+// };
+
+//3
+ const handlePasswordVerified = async () => {
+  try {
+    setIsLoading(true);
+
+    const updateData = {
+      total_amount: Number(finalAmount),
+      payment_status: paymentStatus,
+      booking_status: bookingStatus,
+      upload_status: uploadStatus,
+      admin_notes: adminNotes,
+      updated_at: new Date().toISOString(),
+    };
+
+    console.log("=== BOOKING UPDATE START ===");
+    console.log("Booking ID:", booking.id);
+    console.log("Update Data:", updateData);
+
+    // UPDATE + RETURN UPDATED ROW
+    const { data, error } = await supabase
+      .from("bookings")
+      .update(updateData)
+      .eq("id", booking.id)
+      .select("*");
+
+    console.log("Supabase returned:", data);
+
+    if (error) {
+      console.error("=== SUPABASE UPDATE ERROR ===", error);
+      throw error;
     }
-  };
 
+    // IMPORTANT: Check whether a row was actually updated
+    if (!data || data.length === 0) {
+      throw new Error(
+        "Supabase updated 0 rows. The booking ID does not match or the UPDATE policy is blocking the operation."
+      );
+    }
+
+    console.log("=== DATABASE UPDATE CONFIRMED ===");
+    console.log(data[0]);
+
+    setShowPasswordModal(false);
+    setIsEditing(false);
+
+    onUpdate(data[0]);
+
+  } catch (error) {
+    console.error("=== UPDATE FAILED ===", error);
+
+    alert(`Failed to update booking: ${error.message}`);
+  } finally {
+    setIsLoading(false);
+  }
+};
   return (
     <>
       {/* Backdrop */}
