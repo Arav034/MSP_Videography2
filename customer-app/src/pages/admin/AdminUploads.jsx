@@ -243,7 +243,7 @@ export default function AdminUploads() {
                       </p>
                     </td>
                     <td className="py-4 px-4">
-                      <p className="text-gray-600 text-sm">
+                      <p className="font-semibold text-charcoal text-sm">
                         {upload.budget_range || "—"}
                       </p>
                     </td>

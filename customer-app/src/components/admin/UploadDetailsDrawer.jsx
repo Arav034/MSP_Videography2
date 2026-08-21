@@ -14,6 +14,10 @@ export default function UploadDetailsDrawer({
   const [isEditing, setIsEditing] = useState(false);
   const [adminNotes, setAdminNotes] = useState(upload.admin_notes || "");
   const [uploadStatus, setUploadStatus] = useState(upload.upload_status);
+  
+  //new 
+  const [budgetRange, setBudgetRange] = useState(upload.budget_range || "");
+  
   const [isLoading, setIsLoading] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
 
@@ -28,11 +32,20 @@ export default function UploadDetailsDrawer({
       setIsLoading(true);
       const { error } = await supabase
         .from("uploads")
+        // .update({
+        //   upload_status: uploadStatus,
+        //   admin_notes: adminNotes,
+        //   updated_at: new Date().toISOString(),
+        // })
+        
+        //new
         .update({
           upload_status: uploadStatus,
+          budget_range: budgetRange,
           admin_notes: adminNotes,
           updated_at: new Date().toISOString(),
         })
+        
         .eq("id", upload.id);
 
       if (error) throw error;
@@ -151,7 +164,7 @@ export default function UploadDetailsDrawer({
           </div>
 
           {/* Status Management */}
-          {isEditing ? (
+          {/* {isEditing ? (
             <div>
               <h3 className="text-lg font-bold text-charcoal mb-4">
                 Update Status
@@ -187,7 +200,75 @@ export default function UploadDetailsDrawer({
                 </div>
               </div>
             </div>
+          ) : ( */}
+          {/* Status & Budget Management */}
+
+          {isEditing ? (
+            <div>
+              <h3 className="text-lg font-bold text-charcoal mb-4">
+                Update Details
+              </h3>
+
+              <div className="space-y-4">
+
+                {/* Budget */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">
+                    Budget
+                  </label>
+
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                      ₹
+                    </span>
+                    <input
+                      type="number"
+                      value={budgetRange}
+                      onChange={(e) => setBudgetRange(e.target.value)}
+                      placeholder="Enter budget amount"
+                      min="0"
+                      className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-msp-blue"
+                    />
+                  </div>
+                </div>
+
+                {/* Upload Status */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">
+                    Upload Status
+                  </label>
+
+                  <select
+                    value={uploadStatus}
+                    onChange={(e) => setUploadStatus(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-msp-blue"
+                  >
+                    <option value="Waiting">Waiting</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                </div>
+
+                {/* Admin Notes */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">
+                    Admin Notes
+                  </label>
+
+                  <textarea
+                    value={adminNotes}
+                    onChange={(e) => setAdminNotes(e.target.value)}
+                    rows="3"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-msp-blue"
+                    placeholder="Add any notes..."
+                  />
+                </div>
+
+              </div>
+            </div>
           ) : (
+
             <div>
               <h3 className="text-lg font-bold text-charcoal mb-4">
                 Current Status
@@ -256,11 +337,20 @@ export default function UploadDetailsDrawer({
                 {isLoading ? "Saving..." : "Save Changes"}
               </button>
               <button
+                // onClick={() => {
+                //   setIsEditing(false);
+                //   setAdminNotes(upload.admin_notes || "");
+                //   setUploadStatus(upload.upload_status);
+                // }}
+                
+                //new 
                 onClick={() => {
                   setIsEditing(false);
                   setAdminNotes(upload.admin_notes || "");
                   setUploadStatus(upload.upload_status);
+                  setBudgetRange(upload.budget_range || "");
                 }}
+                
                 className="w-full px-4 py-2 border border-gray-300 hover:bg-gray-50 text-charcoal rounded-lg font-medium transition-colors"
               >
                 Cancel
