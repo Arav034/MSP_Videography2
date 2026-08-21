@@ -50,15 +50,15 @@ export default function ReviewStep({
         />
 
         <div className="border border-mist bg-white divide-y divide-mist">
-          <Row label="Subtotal" value={`₹${subtotal.toFixed(2)}`} />
+          {/* <Row label="Subtotal" value={`₹${subtotal.toFixed(2)}`} />
           {coupon && (
             <Row
               label={`Discount (${coupon.code})`}
               value={`-₹${discount.toFixed(2)}`}
               valueClass="text-brand"
             />
-          )}
-          <Row label="Total" value={`₹${total.toFixed(2)}`} bold />
+          )} */}
+          {/* <Row label="Total" value={`₹${total.toFixed(2)}`} bold /> */}
         </div>
       </div>
 
