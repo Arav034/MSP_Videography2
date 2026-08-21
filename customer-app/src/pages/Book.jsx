@@ -29,40 +29,73 @@ const handleConfirm = async ({ total, coupon }) => {
 
     const bookingNumber = `MSP${Date.now()}`;
 
-    const bookingData = {
-      booking_number: bookingNumber,
+    // const bookingData = {
+    //   booking_number: bookingNumber,
 
-      service: service?.title,
-      category: service?.category,
+    //   service: service?.title,
+    //   category: service?.category,
 
-      booking_date: date,
-      booking_time: time,
+    //   booking_date: date,
+    //   booking_time: time,
 
-      customer_name: details.name,
-      email: details.email,
-      phone: details.phone,
-      notes: details.notes,
+    //   customer_name: details.name,
+    //   email: details.email,
+    //   phone: details.phone,
+    //   notes: details.notes,
 
-      coupon_code: coupon?.code ?? null,
+    //   coupon_code: coupon?.code ?? null,
 
-      subtotal: service?.price ?? 0,
-      discount: coupon
-        ? coupon.type === "percent"
-          ? Math.round((service.price * coupon.value) / 100)
-          : coupon.value
-        : 0,
+    //   subtotal: service?.price ?? 0,
+    //   discount: coupon
+    //     ? coupon.type === "percent"
+    //       ? Math.round((service.price * coupon.value) / 100)
+    //       : coupon.value
+    //     : 0,
 
-      total_amount: total,
+    //   total_amount: total,
 
-      payment_status: "Pending",
-      booking_status: "Pending",
-      upload_status: "Waiting",
+    //   payment_status: "Pending",
+    //   booking_status: "Pending",
+    //   upload_status: "Waiting",
 
-      admin_notes: null,
-    };
+    //   admin_notes: null,
+    // };
 
     // console.log("Booking Data:", bookingData);
+   
+    //new
+    const bookingData = {
+  booking_number: bookingNumber,
 
+  service: service?.title,
+  category: service?.category,
+
+  booking_date: date,
+  booking_time: time,
+
+  customer_name: details.name,
+  email: details.email,
+  phone: details.phone,
+  notes: details.notes,
+
+  coupon_code: coupon?.code ?? null,
+
+  subtotal: Number(service?.price ?? 0),
+
+  discount: coupon
+    ? coupon.type === "percent"
+      ? Math.round((Number(service?.price ?? 0) * coupon.value) / 100)
+      : coupon.value
+    : 0,
+
+  total_amount: String(total ?? 0),
+
+  payment_status: "Pending",
+  booking_status: "Pending",
+  upload_status: "Waiting",
+
+  admin_notes: null,
+     };
     
     const savedBooking = await createBooking(bookingData);
 

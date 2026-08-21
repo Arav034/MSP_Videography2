@@ -16,7 +16,8 @@ export default function ReviewStep({
     ? new Date(date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
     : "";
 
-  const subtotal = service?.price ?? 0;
+  // const subtotal = service?.price ?? 0;
+  const subtotal = Number(service?.price ?? 0);
 
   const discount = useMemo(() => {
     if (!coupon) return 0;
@@ -24,8 +25,8 @@ export default function ReviewStep({
     return Math.min(coupon.value, subtotal);
   }, [coupon, subtotal]);
 
-  const total = Math.max(subtotal - discount, 0);
-
+  // const total = Math.max(subtotal - discount, 0);
+  const total = Number(Math.max(subtotal - discount, 0));
   return (
     <div>
       <p className="eyebrow mb-2 text-center">Step 4 of 4</p>

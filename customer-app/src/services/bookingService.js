@@ -1,3 +1,38 @@
+import { supabase } from "./supabase/supabaseClient";
+
+export async function createBooking(bookingData) {
+  const { data: bookingNumber, error: numberError } =
+    await supabase.rpc("generate_booking_number");
+
+  if (numberError) {
+    throw new Error(
+      `Booking number failed: ${numberError.message}`
+    );
+  }
+
+  const finalBookingData = {
+    ...bookingData,
+    booking_number: bookingNumber,
+  };
+
+  const { error } = await supabase
+    .from("bookings")
+    .insert([finalBookingData]);
+
+  if (error) {
+    throw new Error(
+      `Booking insert failed: ${error.message}`
+    );
+  }
+  
+  return {
+    success: true,
+    bookingNumber,
+  };
+}
+
+
+
 // import { supabase } from "./supabase/supabaseClient";
 
 // export async function createBooking(bookingData) {
@@ -100,45 +135,3 @@
 //   };
 // }
 
-import { supabase } from "./supabase/supabaseClient";
-
-export async function createBooking(bookingData) {
-  console.log("STEP 1: Starting booking");
-
-  const { data: bookingNumber, error: numberError } =
-    await supabase.rpc("generate_booking_number");
-
-  if (numberError) {
-    console.error("STEP 2 RPC ERROR:", numberError);
-    throw new Error(
-      `Booking number failed: ${numberError.message}`
-    );
-  }
-
-  console.log("STEP 2 RPC SUCCESS:", bookingNumber);
-
-  const finalBookingData = {
-    ...bookingData,
-    booking_number: bookingNumber,
-  };
-
-  console.log("STEP 3 FINAL DATA:", finalBookingData);
-
-  const { error } = await supabase
-    .from("bookings")
-    .insert([finalBookingData]);
-
-  if (error) {
-    console.error("STEP 4 INSERT ERROR:", error);
-    throw new Error(
-      `Booking insert failed: ${error.message}`
-    );
-  }
-
-  console.log("STEP 4 INSERT SUCCESS");
-
-  return {
-    success: true,
-    bookingNumber,
-  };
-}
