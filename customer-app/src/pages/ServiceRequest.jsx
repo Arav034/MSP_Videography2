@@ -19,7 +19,7 @@ const EDITING_SERVICE_OPTIONS = BOOKING_SERVICE_OPTIONS.filter(
 );
 import { ROUTES } from "@/constants/routes";
 
-const BUDGET_RANGES = ["Under ₹5,000", "₹5,000 – ₹15,000", "₹15,000 – ₹40,000", "₹40,000+"];
+const BUDGET_RANGES = ["Pro","Mid","Low"];
 
 const INITIAL_STATE = {
   name: "",
@@ -503,7 +503,7 @@ const handleSubmit = async (e) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <label className="flex flex-col gap-2">
             <span className="font-mono text-xs tracking-widest2 uppercase text-steel">
-              Budget Range
+              Budget Type
             </span>
             <select
               name="budget"
@@ -513,7 +513,7 @@ const handleSubmit = async (e) => {
                          focus:outline-none focus:border-brand transition-colors duration-300"
             >
               <option value="" disabled>
-                Select a range
+                Select a type
               </option>
               {BUDGET_RANGES.map((range) => (
                 <option key={range} value={range}>
