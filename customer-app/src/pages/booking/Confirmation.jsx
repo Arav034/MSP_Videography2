@@ -9,16 +9,16 @@ export default function Confirmation({ service, total }) {
         <Check size={28} />
       </div>
       <h2 className="font-display text-3xl mb-4">Booking request sent</h2>
-      <p className="text-steel max-w-md mx-auto mb-2">
+      <p className="text-steel max-w-md mx-auto mb-10">
         We've received your request for{" "}
         <span className="text-ink">{service?.title}</span>. Our team will
         confirm your session shortly.
       </p>
-      {typeof total === "number" && (
-        <p className="text-steel max-w-md mx-auto mb-10">
-          Total: <span className="text-ink font-medium">₹{total.toFixed(2)}</span>
+      {/* {typeof total === "number" && (
+        <p className="text-black max-w-md mx-auto text-lg mb-10">
+         "Admin will contact you to confirm the final price."
         </p>
-      )}
+      )} */}
       <Link to={ROUTES.HOME} className="btn-primary">
         Back To Home
       </Link>
