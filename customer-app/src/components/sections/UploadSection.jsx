@@ -9,10 +9,14 @@ import {
 } from "lucide-react";
 
 import Dropzone from "@/components/common/Dropzone";
-import SectionHeading from "@/components/common/SectionHeading";
 import FilePreviewModal from "@/components/common/FilePreviewModal";
 import { useUpload } from "@/hooks/useUpload";
 import { ROUTES } from "@/constants/routes";
+
+
+/* =========================================================
+   FILE SIZE FORMATTER
+========================================================= */
 
 function formatSize(bytes) {
   if (!bytes) return "0 KB";
@@ -24,9 +28,19 @@ function formatSize(bytes) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+
+/* =========================================================
+   STEPS
+========================================================= */
+
 const STEPS = {
   MAIN: "main",
 };
+
+
+/* =========================================================
+   UPLOAD SECTION
+========================================================= */
 
 export default function UploadSection() {
   const {
@@ -40,49 +54,193 @@ export default function UploadSection() {
   const [step] = useState(STEPS.MAIN);
   const [previewFile, setPreviewFile] = useState(null);
 
+
   return (
     <section
       id="upload-section"
-      className="relative overflow-hidden border-y border-mist"
+      className="
+        relative
+        overflow-hidden
+        border-y
+        border-mist
+      "
     >
-      {/* ================= BACKGROUND ================= */}
+
+      {/* =====================================================
+          BACKGROUND
+      ===================================================== */}
 
       <div
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat scale-105 blur-sm"
+        className="
+          absolute
+          inset-0
+          z-0
+          scale-105
+          bg-cover
+          bg-center
+          bg-no-repeat
+        "
         style={{
           backgroundImage: "url('/images/bg.jpg')",
         }}
       />
 
-      <div className="absolute inset-0 z-0 bg-white/10" />
+      {/* Dark overlay */}
 
-      {/* ================= MAIN CONTENT ================= */}
+      <div
+        className="
+          absolute
+          inset-0
+          z-0
+          bg-ink/65
+        "
+      />
 
-      <div className="relative z-10 max-w-4xl mx-auto px-6 md:px-10 py-20">
+      {/* Gradient overlay */}
 
-        {/* Heading */}
+      <div
+        className="
+          absolute
+          inset-0
+          z-0
+          bg-gradient-to-b
+          from-ink/40
+          via-ink/60
+          to-ink/80
+        "
+      />
 
-        <SectionHeading
-          eyebrow="Start a Project"
-          title="Upload for Editing"
-          align="center"
-          light
-        />
 
-        <p className="mt-4 text-white/90 text-center max-w-lg mx-auto">
-          Have raw photos, footage, or audio ready? Upload them here and tell
-          us what you need — our editing team will take it from there.
-        </p>
+      {/* =====================================================
+          MAIN CONTENT
+      ===================================================== */}
 
-        {/* ================= UPLOAD ================= */}
+      <div
+        className="
+          relative
+          z-10
+          max-w-5xl
+          mx-auto
+          px-6
+          md:px-10
+          py-24
+          md:py-28
+        "
+      >
+
+        {/* ===================================================
+            SECTION INTRO
+        =================================================== */}
+
+        <div
+          className="
+            text-center
+            max-w-2xl
+            mx-auto
+          "
+        >
+
+          {/* Eyebrow */}
+
+          <div className="mb-5">
+
+            <span
+              className="
+                inline-flex
+                items-center
+                gap-3
+                font-mono
+                text-[11px]
+                tracking-[0.28em]
+                uppercase
+                text-white/70
+              "
+            >
+
+              <span
+                className="
+                  w-8
+                  h-px
+                  bg-white/40
+                "
+              />
+
+              Start a Project
+
+              <span
+                className="
+                  w-8
+                  h-px
+                  bg-white/40
+                "
+              />
+
+            </span>
+
+          </div>
+
+
+          {/* Main heading */}
+
+          <h2
+            className="
+              font-display
+              text-4xl
+              sm:text-5xl
+              md:text-6xl
+              font-medium
+              tracking-tight
+              text-white
+            "
+          >
+            Upload for Editing
+          </h2>
+
+
+          {/* Description */}
+
+          <p
+            className="
+              mt-6
+              text-base
+              md:text-lg
+              leading-7
+              text-white/75
+              max-w-xl
+              mx-auto
+            "
+          >
+            Have raw photos, footage, or audio ready?
+            Upload your files and tell us what you need.
+            Our editing team will take it from there.
+          </p>
+
+        </div>
+
+
+        {/* ===================================================
+            MAIN UPLOAD AREA
+        =================================================== */}
 
         {step === STEPS.MAIN && (
-          <div className="mt-10">
 
-            <div className="shadow-sm">
+          <div className="mt-12 md:mt-16">
+
+            {/* =================================================
+                DROPZONE
+            ================================================= */}
+
+            <div
+              className="
+                rounded-2xl
+                overflow-hidden
+                shadow-2xl
+              "
+            >
 
               <Dropzone
                 onFiles={addFiles}
+
                 accept="
                   image/*
                   ,video/mp4
@@ -93,9 +251,13 @@ export default function UploadSection() {
                   ,.braw
                   ,.r3d
                 "
+
                 label="Drag and drop your files here"
+
                 description="Or click below to browse images, videos, or audio files from your computer."
+
                 buttonLabel="Select Files"
+
                 formats={[
                   "MP4",
                   "MOV",
@@ -110,24 +272,98 @@ export default function UploadSection() {
                   "WAV",
                   "M4A",
                 ]}
+
                 sizeLimit="4K / 8K RAW"
               />
 
             </div>
 
-            {/* ================= FILE COUNT ================= */}
+
+            {/* =================================================
+                FILE COUNT / FILE LIST
+            ================================================= */}
 
             {files.length > 0 && (
-              <div className="mt-8">
 
-                <p className="font-mono text-xs tracking-wideish uppercase text-steel mb-4">
-                  {files.length} file
-                  {files.length > 1 ? "s" : ""} added
-                </p>
+              <div className="mt-12">
 
-                {/* ================= FILE GRID ================= */}
+                {/* =============================================
+                    FILE HEADER
+                ============================================= */}
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                <div
+                  className="
+                    flex
+                    flex-col
+                    sm:flex-row
+                    sm:items-center
+                    sm:justify-between
+                    gap-3
+                    mb-5
+                    pb-4
+                    border-b
+                    border-white/20
+                  "
+                >
+
+                  {/* Left */}
+
+                  <div>
+
+                    <p
+                      className="
+                        font-mono
+                        text-[11px]
+                        tracking-[0.25em]
+                        uppercase
+                        text-white/60
+                      "
+                    >
+                      Your Files
+                    </p>
+
+                    <p
+                      className="
+                        mt-1
+                        text-sm
+                        text-white/90
+                      "
+                    >
+                      {files.length} file
+                      {files.length > 1 ? "s" : ""} ready
+                    </p>
+
+                  </div>
+
+
+                  {/* Right */}
+
+                  <span
+                    className="
+                      text-xs
+                      font-mono
+                      text-white/50
+                    "
+                  >
+                    Review before continuing
+                  </span>
+
+                </div>
+
+
+                {/* =============================================
+                    FILE GRID
+                ============================================= */}
+
+                <div
+                  className="
+                    grid
+                    grid-cols-2
+                    sm:grid-cols-3
+                    md:grid-cols-4
+                    gap-4
+                  "
+                >
 
                   {files.map((file) => (
 
@@ -143,36 +379,58 @@ export default function UploadSection() {
                         group
                         cursor-pointer
                         overflow-hidden
+                        rounded-lg
+                        shadow-lg
                       "
                     >
 
-                      {/* ================================================= */}
-                      {/* IMAGE */}
-                      {/* ================================================= */}
+                      {/* =======================================
+                          IMAGE
+                      ======================================= */}
 
                       {file.type === "image" && (
+
                         <img
                           src={file.previewUrl}
                           alt={file.name}
-                          className="w-full h-full object-cover"
+                          className="
+                            w-full
+                            h-full
+                            object-cover
+                            transition-transform
+                            duration-500
+                            group-hover:scale-105
+                          "
                         />
+
                       )}
 
-                      {/* ================================================= */}
-                      {/* VIDEO */}
-                      {/* ================================================= */}
+
+                      {/* =======================================
+                          VIDEO
+                      ======================================= */}
 
                       {file.type === "video" && (
+
                         <>
+
                           <video
                             src={file.previewUrl}
                             muted
                             playsInline
                             preload="metadata"
-                            className="w-full h-full object-cover"
+                            className="
+                              w-full
+                              h-full
+                              object-cover
+                              transition-transform
+                              duration-500
+                              group-hover:scale-105
+                            "
                           />
 
-                          {/* Video Play Icon */}
+
+                          {/* Video play button */}
 
                           <div
                             className="
@@ -187,32 +445,44 @@ export default function UploadSection() {
                               duration-300
                             "
                           >
+
                             <div
                               className="
-                                w-10
-                                h-10
+                                w-12
+                                h-12
                                 rounded-full
                                 bg-white/90
                                 flex
                                 items-center
                                 justify-center
+                                shadow-lg
                               "
                             >
+
                               <Play
-                                size={16}
-                                className="text-ink ml-0.5"
+                                size={17}
+                                className="
+                                  text-ink
+                                  ml-0.5
+                                "
                                 fill="currentColor"
                               />
+
                             </div>
+
                           </div>
+
                         </>
+
                       )}
 
-                      {/* ================================================= */}
-                      {/* AUDIO */}
-                      {/* ================================================= */}
+
+                      {/* =======================================
+                          AUDIO
+                      ======================================= */}
 
                       {file.type === "audio" && (
+
                         <div
                           className="
                             w-full
@@ -222,12 +492,12 @@ export default function UploadSection() {
                             flex-col
                             items-center
                             justify-center
-                            p-3
+                            p-4
                           "
                           onClick={(e) => e.stopPropagation()}
                         >
 
-                          {/* Microphone */}
+                          {/* Microphone icon */}
 
                           <div
                             className="
@@ -242,11 +512,14 @@ export default function UploadSection() {
                               mb-3
                             "
                           >
+
                             <Mic
                               size={28}
                               className="text-steel"
                             />
+
                           </div>
+
 
                           {/* Audio filename */}
 
@@ -259,15 +532,15 @@ export default function UploadSection() {
                               max-w-full
                               mb-3
                               px-1
+                              text-center
                             "
                             title={file.name}
                           >
                             {file.name}
                           </p>
 
-                          {/* ================================================= */}
-                          {/* AUDIO PLAYER */}
-                          {/* ================================================= */}
+
+                          {/* Audio player */}
 
                           <audio
                             src={file.previewUrl}
@@ -278,9 +551,13 @@ export default function UploadSection() {
                           />
 
                         </div>
+
                       )}
 
-                      {/* ================= HOVER OVERLAY ================= */}
+
+                      {/* =======================================
+                          HOVER OVERLAY
+                      ======================================= */}
 
                       <div
                         className="
@@ -294,7 +571,10 @@ export default function UploadSection() {
                         "
                       />
 
-                      {/* ================= REMOVE BUTTON ================= */}
+
+                      {/* =======================================
+                          REMOVE BUTTON
+                      ======================================= */}
 
                       <button
                         type="button"
@@ -306,25 +586,32 @@ export default function UploadSection() {
                           absolute
                           top-2
                           right-2
-                          w-6
-                          h-6
-                          bg-ink/70
+                          w-7
+                          h-7
+                          rounded-full
+                          bg-ink/75
                           text-white
                           flex
                           items-center
                           justify-center
                           opacity-0
                           group-hover:opacity-100
-                          transition-opacity
+                          transition-all
                           duration-300
+                          hover:bg-red-500
                           z-20
                         "
                         aria-label={`Remove ${file.name}`}
                       >
+
                         <X size={14} />
+
                       </button>
 
-                      {/* ================= FILE INFO ================= */}
+
+                      {/* =======================================
+                          FILE INFO
+                      ======================================= */}
 
                       <div
                         className="
@@ -332,11 +619,11 @@ export default function UploadSection() {
                           bottom-0
                           left-0
                           right-0
-                          p-2
+                          p-2.5
                           flex
                           items-center
                           gap-1.5
-                          bg-ink/60
+                          bg-ink/70
                           opacity-0
                           group-hover:opacity-100
                           transition-opacity
@@ -348,31 +635,49 @@ export default function UploadSection() {
                         {/* Image icon */}
 
                         {file.type === "image" && (
+
                           <FileImage
                             size={12}
-                            className="text-white shrink-0"
+                            className="
+                              text-white
+                              shrink-0
+                            "
                           />
+
                         )}
+
 
                         {/* Video icon */}
 
                         {file.type === "video" && (
+
                           <FileVideo
                             size={12}
-                            className="text-white shrink-0"
+                            className="
+                              text-white
+                              shrink-0
+                            "
                           />
+
                         )}
+
 
                         {/* Audio icon */}
 
                         {file.type === "audio" && (
+
                           <Mic
                             size={12}
-                            className="text-white shrink-0"
+                            className="
+                              text-white
+                              shrink-0
+                            "
                           />
+
                         )}
 
-                        {/* Size */}
+
+                        {/* File size */}
 
                         <span
                           className="
@@ -392,33 +697,56 @@ export default function UploadSection() {
 
                 </div>
 
-              </div>
-            )}
 
-            {/* ================= NEXT BUTTON ================= */}
+                {/* =============================================
+                    CONTINUE BUTTON
+                ============================================= */}
 
-            {files.length > 0 && (
-              <div className="mt-8 flex justify-center">
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    navigate(ROUTES.SERVICE_REQUEST)
-                  }
-                  className="btn-primary rounded-lg"
+                <div
+                  className="
+                    mt-10
+                    flex
+                    justify-center
+                  "
                 >
-                  Next
-                </button>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      navigate(ROUTES.SERVICE_REQUEST)
+                    }
+                    className="
+                      btn-primary
+                      min-w-44
+                      justify-center
+                      rounded-lg
+                      py-3.5
+                      shadow-lg
+                      hover:-translate-y-0.5
+                      hover:shadow-xl
+                      transition-all
+                      duration-300
+                    "
+                  >
+                    Continue
+                  </button>
+
+                </div>
 
               </div>
+
             )}
 
           </div>
+
         )}
 
       </div>
 
-      {/* ================= FILE PREVIEW MODAL ================= */}
+
+      {/* =====================================================
+          FILE PREVIEW MODAL
+      ===================================================== */}
 
       <FilePreviewModal
         file={previewFile}
@@ -428,6 +756,439 @@ export default function UploadSection() {
     </section>
   );
 }
+
+// import { useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import {
+//   Mic,
+//   X,
+//   FileImage,
+//   FileVideo,
+//   Play,
+// } from "lucide-react";
+
+// import Dropzone from "@/components/common/Dropzone";
+// import SectionHeading from "@/components/common/SectionHeading";
+// import FilePreviewModal from "@/components/common/FilePreviewModal";
+// import { useUpload } from "@/hooks/useUpload";
+// import { ROUTES } from "@/constants/routes";
+
+// function formatSize(bytes) {
+//   if (!bytes) return "0 KB";
+
+//   if (bytes < 1024 * 1024) {
+//     return `${Math.round(bytes / 1024)} KB`;
+//   }
+
+//   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+// }
+
+// const STEPS = {
+//   MAIN: "main",
+// };
+
+// export default function UploadSection() {
+//   const {
+//     files,
+//     addFiles,
+//     removeFile,
+//   } = useUpload();
+
+//   const navigate = useNavigate();
+
+//   const [step] = useState(STEPS.MAIN);
+//   const [previewFile, setPreviewFile] = useState(null);
+
+//   return (
+//     <section
+//       id="upload-section"
+//       className="relative overflow-hidden border-y border-mist"
+//     >
+//       {/* ================= BACKGROUND ================= */}
+
+//       <div
+//         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat scale-105 blur-sm"
+//         style={{
+//           backgroundImage: "url('/images/bg.jpg')",
+//         }}
+//       />
+
+//       <div className="absolute inset-0 z-0 bg-white/10" />
+
+//       {/* ================= MAIN CONTENT ================= */}
+
+//       <div className="relative z-10 max-w-4xl mx-auto px-6 md:px-10 py-20">
+
+//         {/* Heading */}
+
+//         <SectionHeading
+//           eyebrow="Start a Project"
+//           title="Upload for Editing"
+//           align="center"
+//           light
+//         />
+
+//         <p className="mt-4 text-white/90 text-center max-w-lg mx-auto">
+//           Have raw photos, footage, or audio ready? Upload them here and tell
+//           us what you need — our editing team will take it from there.
+//         </p>
+
+//         {/* ================= UPLOAD ================= */}
+
+//         {step === STEPS.MAIN && (
+//           <div className="mt-10">
+
+//             <div className="shadow-sm">
+
+//               <Dropzone
+//                 onFiles={addFiles}
+//                 accept="
+//                   image/*
+//                   ,video/mp4
+//                   ,video/quicktime
+//                   ,video/webm
+//                   ,audio/*
+//                   ,.mxf
+//                   ,.braw
+//                   ,.r3d
+//                 "
+//                 label="Drag and drop your files here"
+//                 description="Or click below to browse images, videos, or audio files from your computer."
+//                 buttonLabel="Select Files"
+//                 formats={[
+//                   "MP4",
+//                   "MOV",
+//                   "WEBM",
+//                   "MXF",
+//                   "BRAW",
+//                   "R3D",
+//                   "JPG",
+//                   "PNG",
+//                   "TIFF",
+//                   "MP3",
+//                   "WAV",
+//                   "M4A",
+//                 ]}
+//                 sizeLimit="4K / 8K RAW"
+//               />
+
+//             </div>
+
+//             {/* ================= FILE COUNT ================= */}
+
+//             {files.length > 0 && (
+//               <div className="mt-8">
+
+//                 <p className="font-mono text-xs tracking-wideish uppercase text-steel mb-4">
+//                   {files.length} file
+//                   {files.length > 1 ? "s" : ""} added
+//                 </p>
+
+//                 {/* ================= FILE GRID ================= */}
+
+//                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+
+//                   {files.map((file) => (
+
+//                     <div
+//                       key={file.id}
+//                       onClick={() => setPreviewFile(file)}
+//                       className="
+//                         relative
+//                         aspect-square
+//                         bg-mist
+//                         border
+//                         border-mist
+//                         group
+//                         cursor-pointer
+//                         overflow-hidden
+//                       "
+//                     >
+
+//                       {/* ================================================= */}
+//                       {/* IMAGE */}
+//                       {/* ================================================= */}
+
+//                       {file.type === "image" && (
+//                         <img
+//                           src={file.previewUrl}
+//                           alt={file.name}
+//                           className="w-full h-full object-cover"
+//                         />
+//                       )}
+
+//                       {/* ================================================= */}
+//                       {/* VIDEO */}
+//                       {/* ================================================= */}
+
+//                       {file.type === "video" && (
+//                         <>
+//                           <video
+//                             src={file.previewUrl}
+//                             muted
+//                             playsInline
+//                             preload="metadata"
+//                             className="w-full h-full object-cover"
+//                           />
+
+//                           {/* Video Play Icon */}
+
+//                           <div
+//                             className="
+//                               absolute
+//                               inset-0
+//                               flex
+//                               items-center
+//                               justify-center
+//                               opacity-0
+//                               group-hover:opacity-100
+//                               transition-opacity
+//                               duration-300
+//                             "
+//                           >
+//                             <div
+//                               className="
+//                                 w-10
+//                                 h-10
+//                                 rounded-full
+//                                 bg-white/90
+//                                 flex
+//                                 items-center
+//                                 justify-center
+//                               "
+//                             >
+//                               <Play
+//                                 size={16}
+//                                 className="text-ink ml-0.5"
+//                                 fill="currentColor"
+//                               />
+//                             </div>
+//                           </div>
+//                         </>
+//                       )}
+
+//                       {/* ================================================= */}
+//                       {/* AUDIO */}
+//                       {/* ================================================= */}
+
+//                       {file.type === "audio" && (
+//                         <div
+//                           className="
+//                             w-full
+//                             h-full
+//                             bg-mist
+//                             flex
+//                             flex-col
+//                             items-center
+//                             justify-center
+//                             p-3
+//                           "
+//                           onClick={(e) => e.stopPropagation()}
+//                         >
+
+//                           {/* Microphone */}
+
+//                           <div
+//                             className="
+//                               w-14
+//                               h-14
+//                               rounded-full
+//                               bg-white
+//                               flex
+//                               items-center
+//                               justify-center
+//                               shadow-sm
+//                               mb-3
+//                             "
+//                           >
+//                             <Mic
+//                               size={28}
+//                               className="text-steel"
+//                             />
+//                           </div>
+
+//                           {/* Audio filename */}
+
+//                           <p
+//                             className="
+//                               text-xs
+//                               text-steel
+//                               font-medium
+//                               truncate
+//                               max-w-full
+//                               mb-3
+//                               px-1
+//                             "
+//                             title={file.name}
+//                           >
+//                             {file.name}
+//                           </p>
+
+//                           {/* ================================================= */}
+//                           {/* AUDIO PLAYER */}
+//                           {/* ================================================= */}
+
+//                           <audio
+//                             src={file.previewUrl}
+//                             controls
+//                             preload="metadata"
+//                             className="w-full"
+//                             onClick={(e) => e.stopPropagation()}
+//                           />
+
+//                         </div>
+//                       )}
+
+//                       {/* ================= HOVER OVERLAY ================= */}
+
+//                       <div
+//                         className="
+//                           absolute
+//                           inset-0
+//                           bg-ink/0
+//                           group-hover:bg-ink/30
+//                           transition-colors
+//                           duration-300
+//                           pointer-events-none
+//                         "
+//                       />
+
+//                       {/* ================= REMOVE BUTTON ================= */}
+
+//                       <button
+//                         type="button"
+//                         onClick={(e) => {
+//                           e.stopPropagation();
+//                           removeFile(file.id);
+//                         }}
+//                         className="
+//                           absolute
+//                           top-2
+//                           right-2
+//                           w-6
+//                           h-6
+//                           bg-ink/70
+//                           text-white
+//                           flex
+//                           items-center
+//                           justify-center
+//                           opacity-0
+//                           group-hover:opacity-100
+//                           transition-opacity
+//                           duration-300
+//                           z-20
+//                         "
+//                         aria-label={`Remove ${file.name}`}
+//                       >
+//                         <X size={14} />
+//                       </button>
+
+//                       {/* ================= FILE INFO ================= */}
+
+//                       <div
+//                         className="
+//                           absolute
+//                           bottom-0
+//                           left-0
+//                           right-0
+//                           p-2
+//                           flex
+//                           items-center
+//                           gap-1.5
+//                           bg-ink/60
+//                           opacity-0
+//                           group-hover:opacity-100
+//                           transition-opacity
+//                           duration-300
+//                           z-20
+//                         "
+//                       >
+
+//                         {/* Image icon */}
+
+//                         {file.type === "image" && (
+//                           <FileImage
+//                             size={12}
+//                             className="text-white shrink-0"
+//                           />
+//                         )}
+
+//                         {/* Video icon */}
+
+//                         {file.type === "video" && (
+//                           <FileVideo
+//                             size={12}
+//                             className="text-white shrink-0"
+//                           />
+//                         )}
+
+//                         {/* Audio icon */}
+
+//                         {file.type === "audio" && (
+//                           <Mic
+//                             size={12}
+//                             className="text-white shrink-0"
+//                           />
+//                         )}
+
+//                         {/* Size */}
+
+//                         <span
+//                           className="
+//                             text-[10px]
+//                             text-white
+//                             truncate
+//                           "
+//                         >
+//                           {formatSize(file.size)}
+//                         </span>
+
+//                       </div>
+
+//                     </div>
+
+//                   ))}
+
+//                 </div>
+
+//               </div>
+//             )}
+
+//             {/* ================= NEXT BUTTON ================= */}
+
+//             {files.length > 0 && (
+//               <div className="mt-8 flex justify-center">
+
+//                 <button
+//                   type="button"
+//                   onClick={() =>
+//                     navigate(ROUTES.SERVICE_REQUEST)
+//                   }
+//                   className="btn-primary rounded-lg"
+//                 >
+//                   Next
+//                 </button>
+
+//               </div>
+//             )}
+
+//           </div>
+//         )}
+
+//       </div>
+
+      
+
+//       {/* ================= FILE PREVIEW MODAL ================= */}
+
+//       <FilePreviewModal
+//         file={previewFile}
+//         onClose={() => setPreviewFile(null)}
+//       />
+
+//     </section>
+//   );
+// }
 
 // import { useState } from "react";
 // import { useNavigate } from "react-router-dom";
