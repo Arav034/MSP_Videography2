@@ -10,14 +10,14 @@ export default function Header() {
 
   return (
     <>
-      {/* <header className="fixed top-0 left-0 right-0 z-50 bg-frost/90 backdrop-blur-md border-b border-mist shadow-sm transition-all duration-300"> */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-3xl">
+      <header className="top-0 left-0 right-0 z-50 bg-frost/90 backdrop-blur-md border-b border-mist shadow-sm transition-all duration-300">
+      {/* <header className="fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-3xl"> */}
         <div className="max-w-7xl mx-auto px-6 md:px-10 h-20 flex items-center justify-between">
           {/* Logo */}
           <FocusFrame padding="p-1">
             <Link
               to={ROUTES.HOME}
-              className="font-display font-semibold text-2xl tracking-wideish text-white"
+              className="font-display font-semibold text-2xl tracking-wideish text-blue"
             >
               MSP <span className="text-brand font-bold">VIDEOGRAPHY</span>
             </Link>
@@ -67,7 +67,7 @@ export default function Header() {
       </header>
 
       {/* Spacer so page content starts below the fixed header */}
-      <div className="h-20" />
+      
     </>
   );
 }
