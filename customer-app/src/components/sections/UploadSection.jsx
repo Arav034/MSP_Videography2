@@ -405,7 +405,7 @@ export default function UploadSection() {
                   onClick={() =>
                     navigate(ROUTES.SERVICE_REQUEST)
                   }
-                  className="btn-primary"
+                  className="btn-primary rounded-lg"
                 >
                   Next
                 </button>
