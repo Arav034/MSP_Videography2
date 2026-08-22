@@ -207,7 +207,7 @@ export default function Dropzone({
 
       {/* ================= ERROR ================= */}
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex gap-2 text-red-700 text-sm">
+        <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex gap-2 text-red-700 text-sm ">
           <AlertCircle
             size={18}
             className="flex-shrink-0 mt-0.5"
@@ -231,7 +231,7 @@ export default function Dropzone({
         onDrop={handleDrop}
 
         className={cn(
-          "p-2 transition-colors duration-300 animate-glow-blink",
+          "p-2 transition-colors duration-300 animate-glow-blink rounded-xl",
 
           dragging && "brightness-95",
 
@@ -240,7 +240,7 @@ export default function Dropzone({
 
         style={{
           backgroundImage:
-            "linear-gradient(to bottom, #16406B 0%, #ffffff 100%)",
+            "linear-gradient(to bottom, #0654a2 0%, #ffffff 100%)",
         }}
       >
         <div className="border-2 border-dotted border-brand px-6 py-12 flex flex-col items-center justify-center text-center">
@@ -280,7 +280,7 @@ export default function Dropzone({
             disabled={uploading}
 
             className={cn(
-              "btn-primary mb-5",
+              "btn-primary mb-5 rounded-xl",
               uploading &&
                 "opacity-50 cursor-not-allowed"
             )}
