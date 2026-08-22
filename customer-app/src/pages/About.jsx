@@ -21,7 +21,7 @@ export default function About() {
         className="absolute inset-0 z-0 scale-110 bg-cover bg-center blur-l"
         style={{
           // backgroundImage: "url('/images/background2.png')",
-                    backgroundImage: "url('/images/image1.png')",
+          backgroundImage: "url('/images/image1.png')",
 
         }}
       />
@@ -33,12 +33,12 @@ export default function About() {
       <div className="relative z-10">
 
         {/* Hero */}
-        <section className="max-w-4xl mx-auto px-6 md:px-10 pt-24 pb-16 text-center">
-          <span className="eyebrow mb-6">Our Story</span>
+        <section className="max-w-4xl mx-auto px-2 md:px-1 pt-24 text-center">
+          {/* <span className="eyebrow mb-10">Our Story</span>
 
           <h1 className="font-display text-5xl md:text-6xl leading-tight">
             Built on patience, precision, and light.
-          </h1>
+          </h1> */}
         </section>
 
         {/* Story */}
@@ -51,7 +51,7 @@ export default function About() {
             />
           </FocusFrame>
 
-          <div>
+          {/* <div>
             <span className="eyebrow mb-4 block">Since 2017</span>
 
             <h2 className="font-display text-3xl md:text-4xl mb-6">
@@ -72,6 +72,49 @@ export default function About() {
               enough to stay hands-on, and precise enough to be trusted with
               the moments that matter most.
             </p>
+          </div> */}
+          
+          {/* new */}
+          <div>
+            <span className="eyebrow mb-4 block">OUR STORY</span>
+            <h2 className="font-display text-3xl md:text-5xl mb-6 leading-tight">
+              Every story deserves to be seen beautifully.
+            </h2>
+
+            <p className="text-steel leading-relaxed mb-5 text-base md:text-lg">
+              At MSP Videography, we believe great visuals are more than just beautiful
+              frames — they capture emotion, preserve moments, and tell stories that
+              stay with you.
+            </p>
+
+            <p className="text-steel leading-relaxed text-base md:text-lg">
+              From photography and cinematic videography to professional editing and
+              broadcast production, we bring creativity and attention to detail to every
+              project. Our goal is simple: to transform your ideas and moments into
+              visuals that truly stand out.
+            </p>
+
+            <div className="mt-8 flex items-center gap-6">
+              <div>
+                <span className="font-display text-3xl md:text-4xl text-primary block">
+                  Creative
+                </span>
+                <span className="text-sm text-steel tracking-wide">
+                  STORIES THAT CONNECT
+                </span>
+              </div>
+
+              <div className="h-12 w-px bg-steel/20" />
+
+              <div>
+                <span className="font-display text-3xl md:text-4xl text-primary block">
+                  Visuals
+                </span>
+                <span className="text-sm text-steel tracking-wide">
+                  MADE WITH PURPOSE
+                </span>
+              </div>
+            </div>
           </div>
         </section>
 
