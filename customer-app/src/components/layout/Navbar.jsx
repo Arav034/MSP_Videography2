@@ -13,7 +13,7 @@ export default function Navbar() {
             end
             className={({ isActive }) =>
                 cn("nav-link font-nav block px-3 py-1", isActive  ? "text-white font-semibold"
-                  : "hover:text-white/80")
+                  : "hover:text-white/90")
               }
           >
             {item.label}

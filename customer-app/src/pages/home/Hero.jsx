@@ -46,7 +46,7 @@ export default function Hero() {
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <FocusFrame padding="p-1">
-            <Link to={ROUTES.BOOK} className="btn-primary">
+            <Link to={ROUTES.BOOK} className="btn-primary rounded-lg">
               Book a Session
             </Link>
           </FocusFrame>
@@ -56,7 +56,7 @@ export default function Hero() {
               className="inline-flex items-center gap-2 border border-frost/40 text-frost px-6 py-3
                          text-sm tracking-wideish uppercase font-body
                          transition-colors duration-300 ease-frame
-                         hover:border-frost hover:bg-frost/10"
+                         hover:border-frost hover:bg-frost/10 rounded-lg"
             >
               View Portfolio
             </Link>
@@ -71,7 +71,7 @@ export default function Hero() {
         }
         className="absolute top-6 md:top-10 right-6 z-10 flex items-center gap-2 bg-white/10 backdrop-blur-sm
                    border border-white/20 text-frost pl-3 pr-4 py-2.5 text-xs font-mono tracking-wideish uppercase
-                   hover:bg-white/20 hover:border-white/30 transition-colors duration-300 animate-bounce-slow"
+                   hover:bg-white/20 hover:border-white/30 transition-colors duration-300 animate-bounce-slow rounded-lg"
       >
         <UploadCloud size={15} />
         Upload Files to Edit
