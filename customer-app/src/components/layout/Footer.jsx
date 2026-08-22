@@ -88,7 +88,7 @@ export default function Footer() {
         <div className="flex items-center gap-3 mt-8">
 
           {/* Instagram */}
-          <a
+          {/* <a
             href="#"
             aria-label="Instagram"
             className="w-11 h-11 rounded-xl border border-white/10 bg-white/5 flex items-center justify-center text-frost/80 hover:text-white hover:bg-white/10 transition-colors"
@@ -113,10 +113,10 @@ export default function Footer() {
                 stroke="none"
               />
             </svg>
-          </a>
+          </a> */}
 
           {/* YouTube */}
-          <a
+          {/* <a
             href="#"
             aria-label="YouTube"
             className="w-11 h-11 rounded-xl border border-white/10 bg-white/5 flex items-center justify-center text-frost/80 hover:text-white hover:bg-white/10 transition-colors"
@@ -134,10 +134,10 @@ export default function Footer() {
               <path d="M21 12s0-4-1-5-2-1-4-1H8C6 6 4 6 3 7s-1 5-1 5 0 4 1 5 2 1 4 1h8c2 0 3 0 4-1s1-5 1-5Z" />
               <path d="m10 9 5 3-5 3V9Z" />
             </svg>
-          </a>
+          </a> */}
 
           {/* LinkedIn */}
-          <a
+          {/* <a
             href="#"
             aria-label="LinkedIn"
             className="w-11 h-11 rounded-xl border border-white/10 bg-white/5 flex items-center justify-center text-frost/80 hover:text-white hover:bg-white/10 transition-colors"
@@ -158,7 +158,7 @@ export default function Footer() {
               <path d="M12 16v-3.2a2.2 2.2 0 0 1 4.4 0V16" />
               <path d="M12 10v6" />
             </svg>
-          </a>
+          </a> */}
 
         </div>
       </div>
