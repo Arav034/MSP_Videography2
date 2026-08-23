@@ -46,6 +46,7 @@ export async function getUploadByNumber(uploadNumber) {
     throw error;
   }
 
+  console.log("FULL UPLOAD DATA:", data);
   return data;
 }
 
