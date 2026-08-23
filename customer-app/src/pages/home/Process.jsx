@@ -6,10 +6,10 @@ export default function Process() {
   const [ref, progress] = useScrollProgress();
 
   return (
-    <section ref={ref} className="max-w-7xl mx-auto px-6 md:px-10 py-24">
+    <section ref={ref} className="max-w-7xl mx-auto px-6 md:px-10 py-24 bg-ink">
       <div className="text-center mb-16">
-        <span className="eyebrow mb-3 block">How It Works</span>
-        <h2 className="font-display text-3xl md:text-4xl">Our Process</h2>
+        <span className="eyebrow mb-3 block text-white">How It Works</span>
+        <h2 className="font-display text-3xl md:text-4xl text-white">Our Process</h2>
       </div>
 
       {/* Desktop — horizontal fill line */}
@@ -70,8 +70,8 @@ export default function Process() {
                 >
                   {step.index}
                 </div>
-                <h3 className="font-display text-lg mb-1">{step.title}</h3>
-                <p className="text-sm text-steel leading-relaxed">{step.desc}</p>
+                <h3 className="font-display text-lg mb-1 text-white ">{step.title}</h3>
+                <p className="text-sm text-white leading-relaxed">{step.desc}</p>
               </div>
             );
           })}

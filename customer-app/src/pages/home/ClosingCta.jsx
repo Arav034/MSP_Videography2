@@ -22,7 +22,7 @@ export default function ClosingCta() {
 
       <div className="mt-10 flex flex-col items-center gap-5">
         <FocusFrame padding="p-1">
-          <Link to={ROUTES.BOOK} className="btn-primary">
+          <Link to={ROUTES.BOOK} className="btn-primary rounded-lg">
             Book a Session
           </Link>
         </FocusFrame>

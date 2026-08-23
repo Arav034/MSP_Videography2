@@ -60,9 +60,9 @@ return (
     <FAQTeaser />
   </Reveal> */}
 
-  {/* <Reveal>
+  <Reveal>
     <ClosingCta />
-  </Reveal> */}
+  </Reveal>
 </>
 );
 }
