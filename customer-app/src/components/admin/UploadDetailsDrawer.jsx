@@ -21,9 +21,6 @@ export default function UploadDetailsDrawer({
     upload.upload_status || "Waiting"
   );
 
-  const [budgetRange, setBudgetRange] = useState(
-    upload.budget_range || ""
-  );
 
   // FINAL PRICE
   const [finalPrice, setFinalPrice] = useState(
