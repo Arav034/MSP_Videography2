@@ -225,7 +225,7 @@ export default function Payment() {
               </p>
 
               <p className="text-3xl font-bold text-msp-blue">
-                ₹{paymentAmount.toLocaleString("en-IN")}
+                ₹{Number(upload.final_price || 0).toLocaleString("en-IN")}
               </p>
 
             </div>
@@ -237,7 +237,7 @@ export default function Payment() {
             {booking.payment_status !== "Paid" && (
               <div className="pt-2">
 
-                <button
+                {/* <button
                   type="button"
                   onClick={() => {
                     console.log(
@@ -250,7 +250,17 @@ export default function Payment() {
                   className="w-full px-4 py-3 bg-blue-700 text-white rounded-lg font-semibold transition-colors"
                 >
                   Pay ₹{paymentAmount.toLocaleString("en-IN")}
-                </button>
+                </button> */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    console.log("Pay Now clicked:", upload);
+                  }}
+                  disabled={!upload.final_price || Number(upload.final_price) <= 0}
+                  className="w-full px-4 py-3 bg-blue-700 text-white rounded-lg font-semibold transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                >
+  Pay ₹{Number(upload.final_price || 0).toLocaleString("en-IN")}
+</button>
 
                 <p className="text-xs text-gray-500 text-center mt-3">
                   You will be redirected to a secure payment page.

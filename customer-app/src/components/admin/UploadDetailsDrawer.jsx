@@ -432,12 +432,9 @@ export default function UploadDetailsDrawer({
                     Final Price
                   </p>
 
-                  <p className="text-2xl font-bold text-msp-blue mt-1">
-                    ₹
-                    {Number(
-                      upload.final_price || 0
-                    ).toLocaleString("en-IN")}
-                  </p>
+                  <p className="text-3xl font-bold text-msp-blue">
+                    ₹{Number(upload.final_price || 0).toLocaleString("en-IN")}
+                  </p>    
 
                 </div>
 
