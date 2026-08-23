@@ -12,397 +12,1116 @@ export default function UploadDetailsDrawer({
   onUpdate,
 }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [adminNotes, setAdminNotes] = useState(upload.admin_notes || "");
-  const [uploadStatus, setUploadStatus] = useState(upload.upload_status);
-  
-  //new 
-  const [budgetRange, setBudgetRange] = useState(upload.budget_range || "");
-  
+
+  const [adminNotes, setAdminNotes] = useState(
+    upload.admin_notes || ""
+  );
+
+  const [uploadStatus, setUploadStatus] = useState(
+    upload.upload_status || "Waiting"
+  );
+
+  const [budgetRange, setBudgetRange] = useState(
+    upload.budget_range || ""
+  );
+
+  // FINAL PRICE
+  const [finalPrice, setFinalPrice] = useState(
+    upload.final_price ?? ""
+  );
+
   const [isLoading, setIsLoading] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   if (!isOpen) return null;
 
+  // ========================================
+  // SAVE CHANGES
+  // ========================================
+
   const handleSave = async () => {
+    // Validate final price
+    if (
+      finalPrice !== "" &&
+      (isNaN(Number(finalPrice)) || Number(finalPrice) < 0)
+    ) {
+      alert("Please enter a valid final price.");
+      return;
+    }
+
     setShowPasswordModal(true);
   };
+
+  // ========================================
+  // PASSWORD VERIFIED
+  // ========================================
 
   const handlePasswordVerified = async () => {
     try {
       setIsLoading(true);
+
       const { error } = await supabase
         .from("uploads")
-        // .update({
-        //   upload_status: uploadStatus,
-        //   admin_notes: adminNotes,
-        //   updated_at: new Date().toISOString(),
-        // })
-        
-        //new
         .update({
           upload_status: uploadStatus,
+
+          // Customer selected budget
           budget_range: budgetRange,
+
+          // Admin final price
+          final_price:
+            finalPrice === ""
+              ? null
+              : Number(finalPrice),
+
           admin_notes: adminNotes,
+
           updated_at: new Date().toISOString(),
         })
-        
         .eq("id", upload.id);
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
       setShowPasswordModal(false);
       setIsEditing(false);
+
+      // Refresh parent list
       onUpdate();
+
     } catch (error) {
       console.error("Error updating upload:", error);
+
+      alert(
+        error.message ||
+          "Unable to update upload details."
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
+  // ========================================
+  // CANCEL EDITING
+  // ========================================
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+
+    setAdminNotes(
+      upload.admin_notes || ""
+    );
+
+    setUploadStatus(
+      upload.upload_status || "Waiting"
+    );
+
+    setBudgetRange(
+      upload.budget_range || ""
+    );
+
+    setFinalPrice(
+      upload.final_price ?? ""
+    );
+  };
+
+  // ========================================
+  // FORMAT PRICE
+  // ========================================
+
+  const formattedFinalPrice =
+    upload.final_price !== null &&
+    upload.final_price !== undefined
+      ? Number(upload.final_price).toLocaleString(
+          "en-IN"
+        )
+      : null;
+
   return (
     <>
-      {/* Backdrop */}
+      {/* ========================================
+          BACKDROP
+      ======================================== */}
+
       <div
         className="fixed inset-0 bg-black bg-opacity-50 z-40"
         onClick={onClose}
       />
 
-      {/* Drawer */}
+      {/* ========================================
+          DRAWER
+      ======================================== */}
+
       <div className="fixed right-0 top-0 h-screen w-full md:w-96 bg-white shadow-lg z-50 overflow-y-auto animate-slideIn">
-        {/* Header */}
+
+        {/* ========================================
+            HEADER
+        ======================================== */}
+
         <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-charcoal">Upload Details</h2>
+
+          <h2 className="text-xl font-bold text-charcoal">
+            Upload Details
+          </h2>
+
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <X size={24} className="text-gray-600" />
+            <X
+              size={24}
+              className="text-gray-600"
+            />
           </button>
+
         </div>
 
-        {/* Content */}
+        {/* ========================================
+            CONTENT
+        ======================================== */}
+
         <div className="p-6 space-y-6">
-          {/* Customer Information */}
+
+          {/* ========================================
+              CUSTOMER INFORMATION
+          ======================================== */}
+
           <div>
             <h3 className="text-lg font-bold text-charcoal mb-4">
               Customer Information
             </h3>
+
             <div className="space-y-3 bg-gray-50 rounded-lg p-4">
+
+              {/* Name */}
+
               <div>
-                <p className="text-sm font-medium text-gray-600">Name</p>
-                <p className="text-charcoal">{upload.customer_name}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-600">Email</p>
-                <p className="text-charcoal break-all text-sm">
-                  {upload.email}
+                <p className="text-sm font-medium text-gray-600">
+                  Name
+                </p>
+
+                <p className="text-charcoal">
+                  {upload.customer_name || "—"}
                 </p>
               </div>
+
+              {/* Email */}
+
               <div>
-                <p className="text-sm font-medium text-gray-600">Phone</p>
-                <p className="text-charcoal">{upload.phone}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Email
+                </p>
+
+                <p className="text-charcoal break-all text-sm">
+                  {upload.email || "—"}
+                </p>
               </div>
+
+              {/* Phone */}
+
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  Phone
+                </p>
+
+                <p className="text-charcoal">
+                  {upload.phone || "—"}
+                </p>
+              </div>
+
             </div>
           </div>
 
-          {/* Project Information */}
+          {/* ========================================
+              PROJECT INFORMATION
+          ======================================== */}
+
           <div>
+
             <h3 className="text-lg font-bold text-charcoal mb-4">
               Project Information
             </h3>
+
             <div className="space-y-3 bg-gray-50 rounded-lg p-4">
+
+              {/* Upload Number */}
+
               <div>
                 <p className="text-sm font-medium text-gray-600">
                   Upload Number
                 </p>
+
                 <p className="text-charcoal font-semibold">
                   {upload.upload_number}
                 </p>
               </div>
+
+              {/* Service */}
+
               <div>
                 <p className="text-sm font-medium text-gray-600">
                   Service Needed
                 </p>
-                <p className="text-charcoal">{upload.service_needed}</p>
+
+                <p className="text-charcoal">
+                  {upload.service_needed || "—"}
+                </p>
               </div>
+
+              {/* Budget */}
+
               <div>
                 <p className="text-sm font-medium text-gray-600">
                   Budget Range
                 </p>
-                <p className="text-charcoal">{upload.budget_range || "—"}</p>
+
+                <p className="text-charcoal">
+                  {upload.budget_range || "—"}
+                </p>
               </div>
+
+              {/* Deadline */}
+
               <div>
                 <p className="text-sm font-medium text-gray-600">
                   Preferred Deadline
                 </p>
+
                 <p className="text-charcoal">
+
                   {upload.preferred_deadline
-                    ? new Date(upload.preferred_deadline).toLocaleDateString()
+                    ? new Date(
+                        upload.preferred_deadline
+                      ).toLocaleDateString()
                     : "—"}
+
                 </p>
               </div>
+
+              {/* Project Description */}
+
               {upload.project_description && (
                 <div>
+
                   <p className="text-sm font-medium text-gray-600">
                     Project Description
                   </p>
+
                   <p className="text-charcoal text-sm mt-1">
                     {upload.project_description}
                   </p>
+
                 </div>
               )}
+
             </div>
+
           </div>
 
-          {/* Project Files */}
+          {/* ========================================
+              PROJECT FILES
+          ======================================== */}
+
           <div>
+
             <h3 className="text-lg font-bold text-charcoal mb-4">
               Project Files
             </h3>
-            <AdminFileList uploadNumber={upload.upload_number} />
+
+            <AdminFileList
+              uploadNumber={upload.upload_number}
+            />
+
           </div>
 
-          {/* Status Management */}
-          {/* {isEditing ? (
-            <div>
-              <h3 className="text-lg font-bold text-charcoal mb-4">
-                Update Status
-              </h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-600 mb-2">
-                    Upload Status
-                  </label>
-                  <select
-                    value={uploadStatus}
-                    onChange={(e) => setUploadStatus(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-msp-blue"
-                  >
-                    <option value="Waiting">Waiting</option>
-                    <option value="Processing">Processing</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Cancelled">Cancelled</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-600 mb-2">
-                    Admin Notes
-                  </label>
-                  <textarea
-                    value={adminNotes}
-                    onChange={(e) => setAdminNotes(e.target.value)}
-                    rows="3"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-msp-blue"
-                    placeholder="Add any notes..."
-                  />
-                </div>
-              </div>
-            </div>
-          ) : ( */}
-          {/* Status & Budget Management */}
+          {/* ========================================
+              EDIT MODE
+          ======================================== */}
 
           {isEditing ? (
+
             <div>
+
               <h3 className="text-lg font-bold text-charcoal mb-4">
                 Update Details
               </h3>
 
               <div className="space-y-4">
 
-                {/* Budget */}
+                {/* ========================================
+                    BUDGET RANGE
+                ======================================== */}
+
                 <div>
+
                   <label className="block text-sm font-medium text-gray-600 mb-2">
-                    Budget
+                    Budget Range
+                  </label>
+
+                  <input
+                    type="text"
+                    value={budgetRange}
+                    onChange={(e) =>
+                      setBudgetRange(e.target.value)
+                    }
+                    placeholder="Customer budget"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-msp-blue"
+                  />
+
+                </div>
+
+                {/* ========================================
+                    FINAL PRICE
+                ======================================== */}
+
+                <div>
+
+                  <label className="block text-sm font-medium text-gray-600 mb-2">
+                    Final Price
                   </label>
 
                   <div className="relative">
+
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
                       ₹
                     </span>
+
                     <input
                       type="number"
-                      value={budgetRange}
-                      onChange={(e) => setBudgetRange(e.target.value)}
-                      placeholder="Enter budget amount"
+                      value={finalPrice}
+                      onChange={(e) =>
+                        setFinalPrice(e.target.value)
+                      }
+                      placeholder="Enter final price"
                       min="0"
+                      step="0.01"
                       className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-msp-blue"
                     />
+
                   </div>
+
+                  <p className="text-xs text-gray-500 mt-1">
+                    This is the actual amount the customer
+                    will pay.
+                  </p>
+
                 </div>
 
-                {/* Upload Status */}
+                {/* ========================================
+                    UPLOAD STATUS
+                ======================================== */}
+
                 <div>
+
                   <label className="block text-sm font-medium text-gray-600 mb-2">
                     Upload Status
                   </label>
 
                   <select
                     value={uploadStatus}
-                    onChange={(e) => setUploadStatus(e.target.value)}
+                    onChange={(e) =>
+                      setUploadStatus(e.target.value)
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-msp-blue"
                   >
-                    <option value="Waiting">Waiting</option>
-                    <option value="Processing">Processing</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Cancelled">Cancelled</option>
+
+                    <option value="Waiting">
+                      Waiting
+                    </option>
+
+                    <option value="Processing">
+                      Processing
+                    </option>
+
+                    <option value="Completed">
+                      Completed
+                    </option>
+
+                    <option value="Cancelled">
+                      Cancelled
+                    </option>
+
                   </select>
+
                 </div>
 
-                {/* Admin Notes */}
+                {/* ========================================
+                    ADMIN NOTES
+                ======================================== */}
+
                 <div>
+
                   <label className="block text-sm font-medium text-gray-600 mb-2">
                     Admin Notes
                   </label>
 
                   <textarea
                     value={adminNotes}
-                    onChange={(e) => setAdminNotes(e.target.value)}
+                    onChange={(e) =>
+                      setAdminNotes(e.target.value)
+                    }
                     rows="3"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-msp-blue"
                     placeholder="Add any notes..."
                   />
+
                 </div>
 
               </div>
+
             </div>
+
           ) : (
 
+            /* ========================================
+               CURRENT STATUS
+            ======================================== */
+
             <div>
+
               <h3 className="text-lg font-bold text-charcoal mb-4">
                 Current Status
               </h3>
-              <div className="space-y-3 bg-gray-50 rounded-lg p-4">
+
+              <div className="space-y-4 bg-gray-50 rounded-lg p-4">
+
+                {/* Status */}
+
                 <div>
+
                   <p className="text-sm font-medium text-gray-600">
                     Upload Status
                   </p>
+
                   <span
                     className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mt-1 ${
                       upload.upload_status === "Waiting"
                         ? "bg-yellow-100 text-yellow-800"
-                        : upload.upload_status === "Processing"
+                        : upload.upload_status ===
+                          "Processing"
                         ? "bg-blue-100 text-blue-800"
-                        : upload.upload_status === "Completed"
+                        : upload.upload_status ===
+                          "Completed"
                         ? "bg-green-100 text-green-800"
                         : "bg-red-100 text-red-800"
                     }`}
                   >
                     {upload.upload_status}
                   </span>
+
                 </div>
+
+                {/* ========================================
+                    FINAL PRICE DISPLAY
+                ======================================== */}
+
+                <div className="pt-3 border-t border-gray-200">
+
+                  <p className="text-sm font-medium text-gray-600">
+                    Final Price
+                  </p>
+
+                  {formattedFinalPrice ? (
+
+                    <p className="text-2xl font-bold text-msp-blue mt-1">
+                      ₹{formattedFinalPrice}
+                    </p>
+
+                  ) : (
+
+                    <p className="text-gray-500 mt-1">
+                      Not Set
+                    </p>
+
+                  )}
+
+                </div>
+
               </div>
+
             </div>
+
           )}
 
-          {/* Admin Notes Display */}
+          {/* ========================================
+              ADMIN NOTES DISPLAY
+          ======================================== */}
+
           {upload.admin_notes && !isEditing && (
+
             <div>
+
               <h3 className="text-lg font-bold text-charcoal mb-4">
                 Admin Notes
               </h3>
+
               <div className="p-3 bg-yellow-50 rounded-lg text-charcoal text-sm">
                 {upload.admin_notes}
               </div>
+
             </div>
+
           )}
 
-          {/* Metadata */}
+          {/* ========================================
+              METADATA
+          ======================================== */}
+
           <div className="pt-4 border-t border-gray-200">
+
             <div className="space-y-2 text-sm text-gray-600">
+
               <p>
-                <span className="font-medium">Created:</span>{" "}
-                {new Date(upload.created_at).toLocaleString()}
+                <span className="font-medium">
+                  Created:
+                </span>{" "}
+                {new Date(
+                  upload.created_at
+                ).toLocaleString()}
               </p>
+
               {upload.updated_at && (
+
                 <p>
-                  <span className="font-medium">Updated:</span>{" "}
-                  {new Date(upload.updated_at).toLocaleString()}
+                  <span className="font-medium">
+                    Updated:
+                  </span>{" "}
+                  {new Date(
+                    upload.updated_at
+                  ).toLocaleString()}
                 </p>
+
               )}
+
             </div>
+
           </div>
+
         </div>
 
-        {/* Actions */}
+        {/* ========================================
+            ACTIONS
+        ======================================== */}
+
         <div className="sticky bottom-0 bg-white border-t border-gray-200 p-6 space-y-3">
+
           {isEditing ? (
+
             <>
+
+              {/* SAVE */}
+
               <button
                 onClick={handleSave}
                 disabled={isLoading}
                 className="w-full px-4 py-2 bg-msp-blue hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:bg-gray-400"
               >
-                {isLoading ? "Saving..." : "Save Changes"}
+
+                {isLoading
+                  ? "Saving..."
+                  : "Save Changes"}
+
               </button>
+
+              {/* CANCEL */}
+
               <button
-                // onClick={() => {
-                //   setIsEditing(false);
-                //   setAdminNotes(upload.admin_notes || "");
-                //   setUploadStatus(upload.upload_status);
-                // }}
-                
-                //new 
-                onClick={() => {
-                  setIsEditing(false);
-                  setAdminNotes(upload.admin_notes || "");
-                  setUploadStatus(upload.upload_status);
-                  setBudgetRange(upload.budget_range || "");
-                }}
-                
+                onClick={handleCancelEdit}
                 className="w-full px-4 py-2 border border-gray-300 hover:bg-gray-50 text-charcoal rounded-lg font-medium transition-colors"
               >
                 Cancel
               </button>
+
             </>
+
           ) : (
+
             <>
+
+              {/* EDIT */}
+
               <button
-                onClick={() => setIsEditing(true)}
+                onClick={() =>
+                  setIsEditing(true)
+                }
                 className="w-full px-4 py-2 bg-msp-blue hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
               >
                 Edit Details
               </button>
+
+              {/* DELETE */}
+
               <button
                 onClick={onDelete}
                 className="w-full px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg font-medium transition-colors"
               >
                 Delete Request
               </button>
+
+              {/* CLOSE */}
+
               <button
                 onClick={onClose}
                 className="w-full px-4 py-2 border border-gray-300 hover:bg-gray-50 text-charcoal rounded-lg font-medium transition-colors"
               >
                 Close
               </button>
+
             </>
+
           )}
+
         </div>
 
-        {/* Password Modal */}
+        {/* ========================================
+            PASSWORD MODAL
+        ======================================== */}
+
         {showPasswordModal && (
+
           <AdminPasswordModal
             action="Update upload details"
             onVerified={handlePasswordVerified}
-            onCancel={() => setShowPasswordModal(false)}
+            onCancel={() =>
+              setShowPasswordModal(false)
+            }
           />
+
         )}
+
       </div>
+
+      {/* ========================================
+          SLIDE ANIMATION
+      ======================================== */}
 
       <style>{`
         @keyframes slideIn {
           from {
             transform: translateX(100%);
           }
+
           to {
             transform: translateX(0);
           }
         }
+
         .animate-slideIn {
           animation: slideIn 0.3s ease-out;
         }
       `}</style>
+
     </>
   );
 }
+
+
+// import { useState } from "react";
+// import { X } from "lucide-react";
+// import { supabase } from "@/services/supabase/supabaseClient";
+// import AdminPasswordModal from "./AdminPasswordModal";
+// import AdminFileList from "./AdminFileList";
+
+// export default function UploadDetailsDrawer({
+//   upload,
+//   isOpen,
+//   onClose,
+//   onDelete,
+//   onUpdate,
+// }) {
+//   const [isEditing, setIsEditing] = useState(false);
+//   const [adminNotes, setAdminNotes] = useState(upload.admin_notes || "");
+//   const [uploadStatus, setUploadStatus] = useState(upload.upload_status);
+  
+//   //new 
+//   const [budgetRange, setBudgetRange] = useState(upload.budget_range || "");
+  
+//   const [isLoading, setIsLoading] = useState(false);
+//   const [showPasswordModal, setShowPasswordModal] = useState(false);
+
+//   if (!isOpen) return null;
+
+//   const handleSave = async () => {
+//     setShowPasswordModal(true);
+//   };
+
+//   const handlePasswordVerified = async () => {
+//     try {
+//       setIsLoading(true);
+//       const { error } = await supabase
+//         .from("uploads")
+//         // .update({
+//         //   upload_status: uploadStatus,
+//         //   admin_notes: adminNotes,
+//         //   updated_at: new Date().toISOString(),
+//         // })
+        
+//         //new
+//         .update({
+//           upload_status: uploadStatus,
+//           budget_range: budgetRange,
+//           admin_notes: adminNotes,
+//           updated_at: new Date().toISOString(),
+//         })
+        
+//         .eq("id", upload.id);
+
+//       if (error) throw error;
+
+//       setShowPasswordModal(false);
+//       setIsEditing(false);
+//       onUpdate();
+//     } catch (error) {
+//       console.error("Error updating upload:", error);
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   };
+
+//   return (
+//     <>
+//       {/* Backdrop */}
+//       <div
+//         className="fixed inset-0 bg-black bg-opacity-50 z-40"
+//         onClick={onClose}
+//       />
+
+//       {/* Drawer */}
+//       <div className="fixed right-0 top-0 h-screen w-full md:w-96 bg-white shadow-lg z-50 overflow-y-auto animate-slideIn">
+//         {/* Header */}
+//         <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
+//           <h2 className="text-xl font-bold text-charcoal">Upload Details</h2>
+//           <button
+//             onClick={onClose}
+//             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+//           >
+//             <X size={24} className="text-gray-600" />
+//           </button>
+//         </div>
+
+//         {/* Content */}
+//         <div className="p-6 space-y-6">
+//           {/* Customer Information */}
+//           <div>
+//             <h3 className="text-lg font-bold text-charcoal mb-4">
+//               Customer Information
+//             </h3>
+//             <div className="space-y-3 bg-gray-50 rounded-lg p-4">
+//               <div>
+//                 <p className="text-sm font-medium text-gray-600">Name</p>
+//                 <p className="text-charcoal">{upload.customer_name}</p>
+//               </div>
+//               <div>
+//                 <p className="text-sm font-medium text-gray-600">Email</p>
+//                 <p className="text-charcoal break-all text-sm">
+//                   {upload.email}
+//                 </p>
+//               </div>
+//               <div>
+//                 <p className="text-sm font-medium text-gray-600">Phone</p>
+//                 <p className="text-charcoal">{upload.phone}</p>
+//               </div>
+//             </div>
+//           </div>
+
+//           {/* Project Information */}
+//           <div>
+//             <h3 className="text-lg font-bold text-charcoal mb-4">
+//               Project Information
+//             </h3>
+//             <div className="space-y-3 bg-gray-50 rounded-lg p-4">
+//               <div>
+//                 <p className="text-sm font-medium text-gray-600">
+//                   Upload Number
+//                 </p>
+//                 <p className="text-charcoal font-semibold">
+//                   {upload.upload_number}
+//                 </p>
+//               </div>
+//               <div>
+//                 <p className="text-sm font-medium text-gray-600">
+//                   Service Needed
+//                 </p>
+//                 <p className="text-charcoal">{upload.service_needed}</p>
+//               </div>
+//               <div>
+//                 <p className="text-sm font-medium text-gray-600">
+//                   Budget Range
+//                 </p>
+//                 <p className="text-charcoal">{upload.budget_range || "—"}</p>
+//               </div>
+//               <div>
+//                 <p className="text-sm font-medium text-gray-600">
+//                   Preferred Deadline
+//                 </p>
+//                 <p className="text-charcoal">
+//                   {upload.preferred_deadline
+//                     ? new Date(upload.preferred_deadline).toLocaleDateString()
+//                     : "—"}
+//                 </p>
+//               </div>
+//               {upload.project_description && (
+//                 <div>
+//                   <p className="text-sm font-medium text-gray-600">
+//                     Project Description
+//                   </p>
+//                   <p className="text-charcoal text-sm mt-1">
+//                     {upload.project_description}
+//                   </p>
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+
+//           {/* Project Files */}
+//           <div>
+//             <h3 className="text-lg font-bold text-charcoal mb-4">
+//               Project Files
+//             </h3>
+//             <AdminFileList uploadNumber={upload.upload_number} />
+//           </div>
+
+//           {/* Status Management */}
+//           {/* {isEditing ? (
+//             <div>
+//               <h3 className="text-lg font-bold text-charcoal mb-4">
+//                 Update Status
+//               </h3>
+//               <div className="space-y-4">
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-600 mb-2">
+//                     Upload Status
+//                   </label>
+//                   <select
+//                     value={uploadStatus}
+//                     onChange={(e) => setUploadStatus(e.target.value)}
+//                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-msp-blue"
+//                   >
+//                     <option value="Waiting">Waiting</option>
+//                     <option value="Processing">Processing</option>
+//                     <option value="Completed">Completed</option>
+//                     <option value="Cancelled">Cancelled</option>
+//                   </select>
+//                 </div>
+
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-600 mb-2">
+//                     Admin Notes
+//                   </label>
+//                   <textarea
+//                     value={adminNotes}
+//                     onChange={(e) => setAdminNotes(e.target.value)}
+//                     rows="3"
+//                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-msp-blue"
+//                     placeholder="Add any notes..."
+//                   />
+//                 </div>
+//               </div>
+//             </div>
+//           ) : ( */}
+//           {/* Status & Budget Management */}
+
+//           {isEditing ? (
+//             <div>
+//               <h3 className="text-lg font-bold text-charcoal mb-4">
+//                 Update Details
+//               </h3>
+
+//               <div className="space-y-4">
+
+//                 {/* Budget */}
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-600 mb-2">
+//                     Budget
+//                   </label>
+
+//                   <div className="relative">
+//                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+//                       ₹
+//                     </span>
+//                     <input
+//                       type="number"
+//                       value={budgetRange}
+//                       onChange={(e) => setBudgetRange(e.target.value)}
+//                       placeholder="Enter budget amount"
+//                       min="0"
+//                       className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-msp-blue"
+//                     />
+//                   </div>
+//                 </div>
+
+//                 {/* Upload Status */}
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-600 mb-2">
+//                     Upload Status
+//                   </label>
+
+//                   <select
+//                     value={uploadStatus}
+//                     onChange={(e) => setUploadStatus(e.target.value)}
+//                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-msp-blue"
+//                   >
+//                     <option value="Waiting">Waiting</option>
+//                     <option value="Processing">Processing</option>
+//                     <option value="Completed">Completed</option>
+//                     <option value="Cancelled">Cancelled</option>
+//                   </select>
+//                 </div>
+
+//                 {/* Admin Notes */}
+//                 <div>
+//                   <label className="block text-sm font-medium text-gray-600 mb-2">
+//                     Admin Notes
+//                   </label>
+
+//                   <textarea
+//                     value={adminNotes}
+//                     onChange={(e) => setAdminNotes(e.target.value)}
+//                     rows="3"
+//                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-msp-blue"
+//                     placeholder="Add any notes..."
+//                   />
+//                 </div>
+
+//               </div>
+//             </div>
+//           ) : (
+
+//             <div>
+//               <h3 className="text-lg font-bold text-charcoal mb-4">
+//                 Current Status
+//               </h3>
+//               <div className="space-y-3 bg-gray-50 rounded-lg p-4">
+//                 <div>
+//                   <p className="text-sm font-medium text-gray-600">
+//                     Upload Status
+//                   </p>
+//                   <span
+//                     className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mt-1 ${
+//                       upload.upload_status === "Waiting"
+//                         ? "bg-yellow-100 text-yellow-800"
+//                         : upload.upload_status === "Processing"
+//                         ? "bg-blue-100 text-blue-800"
+//                         : upload.upload_status === "Completed"
+//                         ? "bg-green-100 text-green-800"
+//                         : "bg-red-100 text-red-800"
+//                     }`}
+//                   >
+//                     {upload.upload_status}
+//                   </span>
+//                 </div>
+//               </div>
+//             </div>
+//           )}
+
+//           {/* Admin Notes Display */}
+//           {upload.admin_notes && !isEditing && (
+//             <div>
+//               <h3 className="text-lg font-bold text-charcoal mb-4">
+//                 Admin Notes
+//               </h3>
+//               <div className="p-3 bg-yellow-50 rounded-lg text-charcoal text-sm">
+//                 {upload.admin_notes}
+//               </div>
+//             </div>
+//           )}
+
+//           {/* Metadata */}
+//           <div className="pt-4 border-t border-gray-200">
+//             <div className="space-y-2 text-sm text-gray-600">
+//               <p>
+//                 <span className="font-medium">Created:</span>{" "}
+//                 {new Date(upload.created_at).toLocaleString()}
+//               </p>
+//               {upload.updated_at && (
+//                 <p>
+//                   <span className="font-medium">Updated:</span>{" "}
+//                   {new Date(upload.updated_at).toLocaleString()}
+//                 </p>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* Actions */}
+//         <div className="sticky bottom-0 bg-white border-t border-gray-200 p-6 space-y-3">
+//           {isEditing ? (
+//             <>
+//               <button
+//                 onClick={handleSave}
+//                 disabled={isLoading}
+//                 className="w-full px-4 py-2 bg-msp-blue hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:bg-gray-400"
+//               >
+//                 {isLoading ? "Saving..." : "Save Changes"}
+//               </button>
+//               <button
+//                 // onClick={() => {
+//                 //   setIsEditing(false);
+//                 //   setAdminNotes(upload.admin_notes || "");
+//                 //   setUploadStatus(upload.upload_status);
+//                 // }}
+                
+//                 //new 
+//                 onClick={() => {
+//                   setIsEditing(false);
+//                   setAdminNotes(upload.admin_notes || "");
+//                   setUploadStatus(upload.upload_status);
+//                   setBudgetRange(upload.budget_range || "");
+//                 }}
+                
+//                 className="w-full px-4 py-2 border border-gray-300 hover:bg-gray-50 text-charcoal rounded-lg font-medium transition-colors"
+//               >
+//                 Cancel
+//               </button>
+//             </>
+//           ) : (
+//             <>
+//               <button
+//                 onClick={() => setIsEditing(true)}
+//                 className="w-full px-4 py-2 bg-msp-blue hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+//               >
+//                 Edit Details
+//               </button>
+//               <button
+//                 onClick={onDelete}
+//                 className="w-full px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg font-medium transition-colors"
+//               >
+//                 Delete Request
+//               </button>
+//               <button
+//                 onClick={onClose}
+//                 className="w-full px-4 py-2 border border-gray-300 hover:bg-gray-50 text-charcoal rounded-lg font-medium transition-colors"
+//               >
+//                 Close
+//               </button>
+//             </>
+//           )}
+//         </div>
+
+//         {/* Password Modal */}
+//         {showPasswordModal && (
+//           <AdminPasswordModal
+//             action="Update upload details"
+//             onVerified={handlePasswordVerified}
+//             onCancel={() => setShowPasswordModal(false)}
+//           />
+//         )}
+//       </div>
+
+//       <style>{`
+//         @keyframes slideIn {
+//           from {
+//             transform: translateX(100%);
+//           }
+//           to {
+//             transform: translateX(0);
+//           }
+//         }
+//         .animate-slideIn {
+//           animation: slideIn 0.3s ease-out;
+//         }
+//       `}</style>
+//     </>
+//   );
+// }
