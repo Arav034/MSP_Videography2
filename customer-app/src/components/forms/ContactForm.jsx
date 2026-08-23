@@ -117,7 +117,7 @@ export default function ContactForm() {
      <button
         type="submit"
         disabled={submitting || !isPhoneValid}
-        className="btn-primary self-start mt-2 disabled:opacity-70"
+        className="btn-primary self-start mt-2 disabled:opacity-70 rounded-lg"
       >
         {submitting ? <Spinner /> : null}
         {submitting ? "Sending..." : "Send Message"}
