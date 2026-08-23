@@ -98,13 +98,9 @@ const handleConfirm = async ({ total, coupon }) => {
      };
     
     const savedBooking = await createBooking(bookingData);
-
-    console.log(savedBooking);
-
     setBookingTotal(total);
     setSubmitted(true);
   } catch (error) {
-    console.error(error);
     alert("Failed to submit booking.");
   } finally {
     setSubmitting(false);

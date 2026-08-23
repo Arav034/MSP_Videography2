@@ -364,10 +364,6 @@ const handleSubmit = async (e) => {
     // ============================================
     // 4. SUCCESS
     // ============================================
-    console.log(
-      "✅ Service request completed:",
-      uploadNumber
-    );
 
     setSubmitted(true);
     clearFiles();
