@@ -45,7 +45,7 @@ export default function DetailsStep({ details, onChange, onNext, onBack }) {
           type="button"
           disabled={!isValid || !isPhoneValid}
           onClick={onNext}
-          className="btn-primary disabled:opacity-40 disabled:cursor-not-allowed"
+          className="btn-primary disabled:opacity-40 disabled:cursor-not-allowed rounded-lg"
         >
           Continue
         </button>

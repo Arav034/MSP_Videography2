@@ -95,7 +95,7 @@ export default function ServiceStep({ value, onChange, onNext }) {
               type="button"
               disabled={!value}
               onClick={onNext}
-              className="btn-primary disabled:opacity-40 disabled:cursor-not-allowed"
+              className="btn-primary disabled:opacity-40 disabled:cursor-not-allowed rounded-lg"
             >
               Continue
             </button>

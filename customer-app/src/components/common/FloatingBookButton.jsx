@@ -19,7 +19,7 @@ export default function FloatingBookButton() {
       className={cn(
         "fixed bottom-6 left-6 z-30 flex items-center gap-2 bg-brand text-white pl-4 pr-5 py-3",
         "text-sm tracking-wideish uppercase font-body shadow-lg",
-        "transition-all duration-300 ease-frame hover:bg-brand-dark",
+        "transition-all duration-300 ease-frame hover:bg-brand-dark rounded-lg",
         visible
           ? "opacity-100 translate-y-0 pointer-events-auto"
           : "opacity-0 translate-y-4 pointer-events-none"

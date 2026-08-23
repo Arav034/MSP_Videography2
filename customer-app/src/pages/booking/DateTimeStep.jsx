@@ -99,7 +99,7 @@ const minDate = tomorrow.toISOString().split("T")[0];
           type="button"
           disabled={!date || !time}
           onClick={onNext}
-          className="btn-primary disabled:opacity-40 disabled:cursor-not-allowed"
+          className="btn-primary disabled:opacity-40 disabled:cursor-not-allowed rounded-lg"
         >
           Continue
         </button>

@@ -64,13 +64,13 @@ export default function ReviewStep({
       </div>
 
       <div className="mt-12 flex justify-center gap-4">
-        <button type="button" onClick={onBack} className="btn-ghost">
+        <button type="button" onClick={onBack} className="btn-ghost rounded-lg">
           Back
         </button>
        <button
           type="button"
           onClick={() => onConfirm({ total, coupon })}
-          className="btn-primary"
+          className="btn-primary rounded-lg"
           disabled={submitting}
         >
           {submitting ? "Submitting..." : "Confirm Booking"}
