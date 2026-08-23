@@ -39,8 +39,6 @@ export default function Payment() {
       const bookingData = await getBookingForPayment(number);
 
       if (bookingData) {
-        console.log("BOOKING PAYMENT DATA:", bookingData);
-
         setBooking(bookingData);
         return;
       }
@@ -52,8 +50,6 @@ export default function Payment() {
       const uploadData = await getUploadForPayment(number);
 
       if (uploadData) {
-        console.log("UPLOAD PAYMENT DATA:", uploadData);
-
         setUpload(uploadData);
         return;
       }
@@ -65,9 +61,7 @@ export default function Payment() {
       setErrorMessage(
         "No booking or upload found. Please check your number and try again."
       );
-    } catch (error) {
-      console.error("Error finding payment details:", error);
-
+    } catch (error) {     
       setErrorMessage(
         "Unable to find payment details. Please try again."
       );

@@ -13,12 +13,6 @@ export const getBookingForPayment = async (bookingNumber) => {
     }
   );
 
-  console.log("RPC BOOKING DATA:", data);
-  console.log(
-    "RPC BOOKING ERROR:",
-    error ? JSON.stringify(error, null, 2) : null
-  );
-
   if (error) {
     throw error;
   }
@@ -39,7 +33,6 @@ export const getUploadForPayment = async (uploadNumber) => {
   );
 
   if (error) {
-    console.error("UPLOAD PAYMENT FETCH ERROR:", error);
     throw error;
   }
 
