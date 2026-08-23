@@ -21,10 +21,9 @@ export default function UploadDetailsDrawer({
     upload.upload_status || "Waiting"
   );
 
-
-  // FINAL PRICE
+  // Final price decided by admin
   const [finalPrice, setFinalPrice] = useState(
-    upload.final_price ?? ""
+    upload.final_price ?? 0
   );
 
   const [isLoading, setIsLoading] = useState(false);
@@ -33,19 +32,10 @@ export default function UploadDetailsDrawer({
   if (!isOpen) return null;
 
   // ========================================
-  // SAVE CHANGES
+  // SAVE DETAILS
   // ========================================
 
   const handleSave = async () => {
-    // Validate final price
-    if (
-      finalPrice !== "" &&
-      (isNaN(Number(finalPrice)) || Number(finalPrice) < 0)
-    ) {
-      alert("Please enter a valid final price.");
-      return;
-    }
-
     setShowPasswordModal(true);
   };
 
@@ -57,22 +47,20 @@ export default function UploadDetailsDrawer({
     try {
       setIsLoading(true);
 
+      const price = Number(finalPrice);
+
+      if (isNaN(price) || price < 0) {
+        alert("Please enter a valid final price.");
+        setIsLoading(false);
+        return;
+      }
+
       const { error } = await supabase
         .from("uploads")
         .update({
+          final_price: price,
           upload_status: uploadStatus,
-
-          // Customer selected budget
-          budget_range: budgetRange,
-
-          // Admin final price
-          final_price:
-            finalPrice === ""
-              ? null
-              : Number(finalPrice),
-
           admin_notes: adminNotes,
-
           updated_at: new Date().toISOString(),
         })
         .eq("id", upload.id);
@@ -84,56 +72,33 @@ export default function UploadDetailsDrawer({
       setShowPasswordModal(false);
       setIsEditing(false);
 
-      // Refresh parent list
+      // Refresh parent data
       onUpdate();
-
     } catch (error) {
       console.error("Error updating upload:", error);
-
-      alert(
-        error.message ||
-          "Unable to update upload details."
-      );
+      alert("Failed to update upload details.");
     } finally {
       setIsLoading(false);
     }
   };
 
   // ========================================
-  // CANCEL EDITING
+  // CANCEL EDIT
   // ========================================
 
   const handleCancelEdit = () => {
     setIsEditing(false);
 
-    setAdminNotes(
-      upload.admin_notes || ""
-    );
+    setAdminNotes(upload.admin_notes || "");
 
     setUploadStatus(
       upload.upload_status || "Waiting"
     );
 
-    setBudgetRange(
-      upload.budget_range || ""
-    );
-
     setFinalPrice(
-      upload.final_price ?? ""
+      upload.final_price ?? 0
     );
   };
-
-  // ========================================
-  // FORMAT PRICE
-  // ========================================
-
-  const formattedFinalPrice =
-    upload.final_price !== null &&
-    upload.final_price !== undefined
-      ? Number(upload.final_price).toLocaleString(
-          "en-IN"
-        )
-      : null;
 
   return (
     <>
@@ -185,6 +150,7 @@ export default function UploadDetailsDrawer({
           ======================================== */}
 
           <div>
+
             <h3 className="text-lg font-bold text-charcoal mb-4">
               Customer Information
             </h3>
@@ -228,6 +194,7 @@ export default function UploadDetailsDrawer({
               </div>
 
             </div>
+
           </div>
 
           {/* ========================================
@@ -250,7 +217,7 @@ export default function UploadDetailsDrawer({
                 </p>
 
                 <p className="text-charcoal font-semibold">
-                  {upload.upload_number}
+                  {upload.upload_number || "—"}
                 </p>
               </div>
 
@@ -266,14 +233,14 @@ export default function UploadDetailsDrawer({
                 </p>
               </div>
 
-              {/* Budget */}
+              {/* Budget - READ ONLY */}
 
               <div>
                 <p className="text-sm font-medium text-gray-600">
                   Budget Range
                 </p>
 
-                <p className="text-charcoal">
+                <p className="text-charcoal font-semibold">
                   {upload.budget_range || "—"}
                 </p>
               </div>
@@ -286,17 +253,15 @@ export default function UploadDetailsDrawer({
                 </p>
 
                 <p className="text-charcoal">
-
                   {upload.preferred_deadline
                     ? new Date(
                         upload.preferred_deadline
                       ).toLocaleDateString()
                     : "—"}
-
                 </p>
               </div>
 
-              {/* Project Description */}
+              {/* Description */}
 
               {upload.project_description && (
                 <div>
@@ -333,7 +298,7 @@ export default function UploadDetailsDrawer({
           </div>
 
           {/* ========================================
-              EDIT MODE
+              EDIT DETAILS
           ======================================== */}
 
           {isEditing ? (
@@ -345,28 +310,6 @@ export default function UploadDetailsDrawer({
               </h3>
 
               <div className="space-y-4">
-
-                {/* ========================================
-                    BUDGET RANGE
-                ======================================== */}
-
-                <div>
-
-                  <label className="block text-sm font-medium text-gray-600 mb-2">
-                    Budget Range
-                  </label>
-
-                  <input
-                    type="text"
-                    value={budgetRange}
-                    onChange={(e) =>
-                      setBudgetRange(e.target.value)
-                    }
-                    placeholder="Customer budget"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-msp-blue"
-                  />
-
-                </div>
 
                 {/* ========================================
                     FINAL PRICE
@@ -392,15 +335,13 @@ export default function UploadDetailsDrawer({
                       }
                       placeholder="Enter final price"
                       min="0"
-                      step="0.01"
                       className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-msp-blue"
                     />
 
                   </div>
 
                   <p className="text-xs text-gray-500 mt-1">
-                    This is the actual amount the customer
-                    will pay.
+                    This is the amount the customer will pay.
                   </p>
 
                 </div>
@@ -478,10 +419,27 @@ export default function UploadDetailsDrawer({
             <div>
 
               <h3 className="text-lg font-bold text-charcoal mb-4">
-                Current Status
+                Current Details
               </h3>
 
               <div className="space-y-4 bg-gray-50 rounded-lg p-4">
+
+                {/* Final Price */}
+
+                <div>
+
+                  <p className="text-sm font-medium text-gray-600">
+                    Final Price
+                  </p>
+
+                  <p className="text-2xl font-bold text-msp-blue mt-1">
+                    ₹
+                    {Number(
+                      upload.final_price || 0
+                    ).toLocaleString("en-IN")}
+                  </p>
+
+                </div>
 
                 {/* Status */}
 
@@ -495,43 +453,15 @@ export default function UploadDetailsDrawer({
                     className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mt-1 ${
                       upload.upload_status === "Waiting"
                         ? "bg-yellow-100 text-yellow-800"
-                        : upload.upload_status ===
-                          "Processing"
+                        : upload.upload_status === "Processing"
                         ? "bg-blue-100 text-blue-800"
-                        : upload.upload_status ===
-                          "Completed"
+                        : upload.upload_status === "Completed"
                         ? "bg-green-100 text-green-800"
                         : "bg-red-100 text-red-800"
                     }`}
                   >
                     {upload.upload_status}
                   </span>
-
-                </div>
-
-                {/* ========================================
-                    FINAL PRICE DISPLAY
-                ======================================== */}
-
-                <div className="pt-3 border-t border-gray-200">
-
-                  <p className="text-sm font-medium text-gray-600">
-                    Final Price
-                  </p>
-
-                  {formattedFinalPrice ? (
-
-                    <p className="text-2xl font-bold text-msp-blue mt-1">
-                      ₹{formattedFinalPrice}
-                    </p>
-
-                  ) : (
-
-                    <p className="text-gray-500 mt-1">
-                      Not Set
-                    </p>
-
-                  )}
 
                 </div>
 
@@ -579,7 +509,6 @@ export default function UploadDetailsDrawer({
               </p>
 
               {upload.updated_at && (
-
                 <p>
                   <span className="font-medium">
                     Updated:
@@ -588,7 +517,6 @@ export default function UploadDetailsDrawer({
                     upload.updated_at
                   ).toLocaleString()}
                 </p>
-
               )}
 
             </div>
@@ -607,21 +535,15 @@ export default function UploadDetailsDrawer({
 
             <>
 
-              {/* SAVE */}
-
               <button
                 onClick={handleSave}
                 disabled={isLoading}
                 className="w-full px-4 py-2 bg-msp-blue hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:bg-gray-400"
               >
-
                 {isLoading
                   ? "Saving..."
                   : "Save Changes"}
-
               </button>
-
-              {/* CANCEL */}
 
               <button
                 onClick={handleCancelEdit}
@@ -636,18 +558,12 @@ export default function UploadDetailsDrawer({
 
             <>
 
-              {/* EDIT */}
-
               <button
-                onClick={() =>
-                  setIsEditing(true)
-                }
+                onClick={() => setIsEditing(true)}
                 className="w-full px-4 py-2 bg-msp-blue hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
               >
                 Edit Details
               </button>
-
-              {/* DELETE */}
 
               <button
                 onClick={onDelete}
@@ -655,8 +571,6 @@ export default function UploadDetailsDrawer({
               >
                 Delete Request
               </button>
-
-              {/* CLOSE */}
 
               <button
                 onClick={onClose}
@@ -690,7 +604,7 @@ export default function UploadDetailsDrawer({
       </div>
 
       {/* ========================================
-          SLIDE ANIMATION
+          DRAWER ANIMATION
       ======================================== */}
 
       <style>{`
@@ -708,7 +622,6 @@ export default function UploadDetailsDrawer({
           animation: slideIn 0.3s ease-out;
         }
       `}</style>
-
     </>
   );
 }
