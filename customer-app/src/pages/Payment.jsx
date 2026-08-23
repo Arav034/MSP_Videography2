@@ -26,40 +26,41 @@ export default function Payment() {
       setIsLoading(true);
       setErrorMessage("");
 
+      // Clear old result
       setBooking(null);
       setUpload(null);
 
       const number = referenceNumber.trim();
 
-      // ----------------------------------------
-      // FIRST: Try Booking
-      // ----------------------------------------
+      // ========================================
+      // FIRST: TRY BOOKING
+      // ========================================
 
       const bookingData = await getBookingForPayment(number);
 
       if (bookingData) {
-        console.log("Booking found:", bookingData);
+        console.log("BOOKING PAYMENT DATA:", bookingData);
 
         setBooking(bookingData);
         return;
       }
 
-      // ----------------------------------------
-      // SECOND: Try Upload
-      // ----------------------------------------
+      // ========================================
+      // SECOND: TRY UPLOAD
+      // ========================================
 
       const uploadData = await getUploadForPayment(number);
 
       if (uploadData) {
-        console.log("Upload found:", uploadData);
+        console.log("UPLOAD PAYMENT DATA:", uploadData);
 
         setUpload(uploadData);
         return;
       }
 
-      // ----------------------------------------
+      // ========================================
       // NOTHING FOUND
-      // ----------------------------------------
+      // ========================================
 
       setErrorMessage(
         "No booking or upload found. Please check your number and try again."
@@ -80,9 +81,9 @@ export default function Payment() {
   // ========================================
 
   const paymentAmount = booking
-    ? Number(booking.total_amount)
+    ? Number(booking.total_amount || 0)
     : upload
-    ? Number(upload.total_amount || upload.final_amount || 0)
+    ? Number(upload.final_price || 0)
     : 0;
 
   return (
@@ -94,7 +95,7 @@ export default function Payment() {
         ======================================== */}
 
         <h1 className="text-2xl font-bold text-charcoal mb-2">
-          Pay Your Booking
+          Make a Payment
         </h1>
 
         <p className="text-sm text-gray-600 mb-6 leading-relaxed">
@@ -132,9 +133,7 @@ export default function Payment() {
             {isLoading ? "Finding..." : "Find Details"}
           </button>
 
-          {/* ========================================
-              ERROR
-          ======================================== */}
+          {/* ERROR */}
 
           {errorMessage && (
             <p className="mt-4 text-sm text-red-600 text-center">
@@ -143,9 +142,9 @@ export default function Payment() {
           )}
         </div>
 
-        {/* ========================================
+        {/* ==================================================
             BOOKING DETAILS
-        ======================================== */}
+        ================================================== */}
 
         {booking && (
           <div className="mt-6 bg-gray-50 rounded-lg p-5 space-y-4">
@@ -162,7 +161,7 @@ export default function Payment() {
               </p>
 
               <p className="font-semibold text-charcoal">
-                {booking.booking_number}
+                {booking.booking_number || "—"}
               </p>
             </div>
 
@@ -174,7 +173,7 @@ export default function Payment() {
               </p>
 
               <p className="font-semibold text-charcoal">
-                {booking.customer_name}
+                {booking.customer_name || "—"}
               </p>
             </div>
 
@@ -186,7 +185,7 @@ export default function Payment() {
               </p>
 
               <p className="text-charcoal">
-                {booking.service}
+                {booking.service || "—"}
               </p>
             </div>
 
@@ -198,7 +197,7 @@ export default function Payment() {
               </p>
 
               <p className="text-charcoal">
-                {booking.category}
+                {booking.category || "—"}
               </p>
             </div>
 
@@ -210,57 +209,55 @@ export default function Payment() {
               </p>
 
               <p className="font-semibold text-charcoal">
-                {booking.payment_status}
+                {booking.payment_status || "Pending"}
               </p>
             </div>
 
             {/* ========================================
-                AMOUNT
+                BOOKING FINAL PAYMENT
             ======================================== */}
 
-            <div className="pt-3 border-t border-gray-200">
+            <div className="pt-4 border-t border-gray-200">
 
               <p className="text-sm text-gray-600">
                 Final Payment Amount
               </p>
 
               <p className="text-3xl font-bold text-msp-blue">
-                ₹{Number(upload.final_price || 0).toLocaleString("en-IN")}
+                ₹{Number(booking.total_amount || 0).toLocaleString("en-IN")}
               </p>
 
             </div>
 
             {/* ========================================
-                PAY BUTTON
+                BOOKING PAY BUTTON
             ======================================== */}
 
             {booking.payment_status !== "Paid" && (
               <div className="pt-2">
 
-                {/* <button
+                <button
                   type="button"
                   onClick={() => {
                     console.log(
-                      "Pay Now clicked:",
+                      "Booking payment clicked:",
                       booking
                     );
-
-                    // Payment gateway will be integrated here
                   }}
-                  className="w-full px-4 py-3 bg-blue-700 text-white rounded-lg font-semibold transition-colors"
+                  disabled={Number(booking.total_amount || 0) <= 0}
+                  className="w-full px-4 py-3 bg-blue-700 text-white rounded-lg font-semibold transition-colors hover:bg-blue-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
-                  Pay ₹{paymentAmount.toLocaleString("en-IN")}
-                </button> */}
-                <button
-            type="button"
-            onClick={() => {
-              console.log("Pay Now clicked:", upload);
-            }}
-            disabled={!upload.final_price || Number(upload.final_price) <= 0}
-            className="w-full px-4 py-3 bg-blue-700 text-white rounded-lg font-semibold transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-          >
-            Pay ₹{Number(upload.final_price || 0).toLocaleString("en-IN")}
-          </button>
+                  Pay ₹
+                  {Number(
+                    booking.total_amount || 0
+                  ).toLocaleString("en-IN")}
+                </button>
+
+                {Number(booking.total_amount || 0) <= 0 && (
+                  <p className="text-xs text-gray-500 text-center mt-2">
+                    Final price has not been set yet.
+                  </p>
+                )}
 
                 <p className="text-xs text-gray-500 text-center mt-3">
                   You will be redirected to a secure payment page.
@@ -268,6 +265,8 @@ export default function Payment() {
 
               </div>
             )}
+
+            {/* PAID */}
 
             {booking.payment_status === "Paid" && (
               <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-center">
@@ -280,168 +279,191 @@ export default function Payment() {
           </div>
         )}
 
-        {/* ========================================
+        {/* ==================================================
             UPLOAD DETAILS
-        ======================================== */}
+        ================================================== */}
 
         {upload && (
-  <div className="mt-6 bg-gray-50 rounded-lg p-5 space-y-4">
+          <div className="mt-6 bg-gray-50 rounded-lg p-5 space-y-4">
 
-    <h2 className="text-lg font-bold text-charcoal">
-      Upload Details
-    </h2>
+            <h2 className="text-lg font-bold text-charcoal">
+              Upload Details
+            </h2>
 
-    {/* Upload Number */}
-    <div>
-      <p className="text-sm text-gray-600">
-        Upload Number
-      </p>
+            {/* Upload Number */}
 
-      <p className="font-semibold text-charcoal">
-        {upload.upload_number || "—"}
-      </p>
-    </div>
+            <div>
+              <p className="text-sm text-gray-600">
+                Upload Number
+              </p>
 
-    {/* Customer Name */}
-    <div>
-      <p className="text-sm text-gray-600">
-        Customer Name
-      </p>
+              <p className="font-semibold text-charcoal">
+                {upload.upload_number || "—"}
+              </p>
+            </div>
 
-      <p className="font-semibold text-charcoal">
-        {upload.customer_name || "—"}
-      </p>
-    </div>
+            {/* Customer Name */}
 
-    {/* Email */}
-    <div>
-      <p className="text-sm text-gray-600">
-        Email
-      </p>
+            <div>
+              <p className="text-sm text-gray-600">
+                Customer Name
+              </p>
 
-      <p className="text-charcoal">
-        {upload.email || "—"}
-      </p>
-    </div>
+              <p className="font-semibold text-charcoal">
+                {upload.customer_name || "—"}
+              </p>
+            </div>
 
-    {/* Phone */}
-    <div>
-      <p className="text-sm text-gray-600">
-        Phone
-      </p>
+            {/* Email */}
 
-      <p className="text-charcoal">
-        {upload.phone || "—"}
-      </p>
-    </div>
+            <div>
+              <p className="text-sm text-gray-600">
+                Email
+              </p>
 
-    {/* Service */}
-    <div>
-      <p className="text-sm text-gray-600">
-        Service
-      </p>
+              <p className="text-charcoal">
+                {upload.email || "—"}
+              </p>
+            </div>
 
-      <p className="text-charcoal">
-        {upload.service_needed || "—"}
-      </p>
-    </div>
+            {/* Phone */}
 
-    {/* Budget */}
-    <div>
-      <p className="text-sm text-gray-600">
-        Budget
-      </p>
+            <div>
+              <p className="text-sm text-gray-600">
+                Phone
+              </p>
 
-      <p className="text-charcoal">
-        {upload.budget_range || "—"}
-      </p>
-    </div>
+              <p className="text-charcoal">
+                {upload.phone || "—"}
+              </p>
+            </div>
 
-    {/* Deadline */}
-    <div>
-      <p className="text-sm text-gray-600">
-        Deadline
-      </p>
+            {/* Service */}
 
-      <p className="text-charcoal">
-        {upload.preferred_deadline
-          ? new Date(upload.preferred_deadline).toLocaleDateString("en-IN")
-          : "—"}
-      </p>
-    </div>
+            <div>
+              <p className="text-sm text-gray-600">
+                Service
+              </p>
 
-    {/* Project Description */}
-    <div>
-      <p className="text-sm text-gray-600">
-        Project Description
-      </p>
+              <p className="text-charcoal">
+                {upload.service_needed || "—"}
+              </p>
+            </div>
 
-      <p className="text-charcoal">
-        {upload.project_description || "—"}
-      </p>
-    </div>
+            {/* Budget */}
 
-    {/* Upload Status */}
-    <div>
-      <p className="text-sm text-gray-600">
-        Upload Status
-      </p>
+            <div>
+              <p className="text-sm text-gray-600">
+                Budget
+              </p>
 
-      <p className="font-semibold text-charcoal">
-        {upload.upload_status || "—"}
-      </p>
-    </div>
+              <p className="text-charcoal">
+                {upload.budget_range || "—"}
+              </p>
+            </div>
 
-    {/* Admin Notes */}
-    {upload.admin_notes && (
-      <div>
-        <p className="text-sm text-gray-600">
-          Admin Notes
-        </p>
+            {/* Deadline */}
 
-        <p className="text-charcoal">
-          {upload.admin_notes}
-        </p>
-      </div>
-    )}
+            <div>
+              <p className="text-sm text-gray-600">
+                Deadline
+              </p>
 
-    {/* ========================================
-        FINAL PAYMENT AMOUNT
-    ======================================== */}
+              <p className="text-charcoal">
+                {upload.preferred_deadline
+                  ? new Date(
+                      upload.preferred_deadline
+                    ).toLocaleDateString("en-IN")
+                  : "—"}
+              </p>
+            </div>
 
-    <div className="pt-4 border-t border-gray-200">
+            {/* Project Description */}
 
-      <p className="text-sm text-gray-600">
-        Final Payment Amount
-      </p>
+            <div>
+              <p className="text-sm text-gray-600">
+                Project Description
+              </p>
 
-      <p className="text-3xl font-bold text-msp-blue">
-        ₹{Number(paymentAmount || 0).toLocaleString("en-IN")}
-      </p>
+              <p className="text-charcoal">
+                {upload.project_description || "—"}
+              </p>
+            </div>
 
-    </div>
+            {/* Upload Status */}
 
-    {/* ========================================
-        PAY BUTTON
-    ======================================== */}
+            <div>
+              <p className="text-sm text-gray-600">
+                Upload Status
+              </p>
 
-    <button
-      type="button"
-      onClick={() => {
-        console.log("Pay Now clicked:", upload);
+              <p className="font-semibold text-charcoal">
+                {upload.upload_status || "—"}
+              </p>
+            </div>
 
-        // Payment gateway will be integrated here
-      }}
-      className="w-full px-4 py-3 bg-blue-700 text-white rounded-lg font-semibold transition-colors hover:bg-blue-800"
-    >
-      Pay ₹{Number(paymentAmount || 0).toLocaleString("en-IN")}
-    </button>
+            {/* Admin Notes */}
 
-    <p className="text-xs text-gray-500 text-center mt-3">
-      You will be redirected to a secure payment page.
-    </p>
+            {upload.admin_notes && (
+              <div>
+                <p className="text-sm text-gray-600">
+                  Admin Notes
+                </p>
 
-  </div>
+                <p className="text-charcoal">
+                  {upload.admin_notes}
+                </p>
+              </div>
+            )}
+
+            {/* ========================================
+                UPLOAD FINAL PAYMENT
+            ======================================== */}
+
+            <div className="pt-4 border-t border-gray-200">
+
+              <p className="text-sm text-gray-600">
+                Final Payment Amount
+              </p>
+
+              <p className="text-3xl font-bold text-msp-blue">
+                ₹{Number(upload.final_price || 0).toLocaleString("en-IN")}
+              </p>
+
+            </div>
+
+            {/* ========================================
+                UPLOAD PAY BUTTON
+            ======================================== */}
+
+            <button
+              type="button"
+              onClick={() => {
+                console.log(
+                  "Upload payment clicked:",
+                  upload
+                );
+              }}
+              disabled={Number(upload.final_price || 0) <= 0}
+              className="w-full px-4 py-3 bg-blue-700 text-white rounded-lg font-semibold transition-colors hover:bg-blue-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              Pay ₹
+              {Number(
+                upload.final_price || 0
+              ).toLocaleString("en-IN")}
+            </button>
+
+            {Number(upload.final_price || 0) <= 0 && (
+              <p className="text-xs text-gray-500 text-center mt-2">
+                Final price has not been set yet.
+              </p>
+            )}
+
+            <p className="text-xs text-gray-500 text-center mt-3">
+              You will be redirected to a secure payment page.
+            </p>
+
+          </div>
         )}
 
       </div>
