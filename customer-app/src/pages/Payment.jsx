@@ -251,15 +251,15 @@ export default function Payment() {
                 >
                   Pay ₹{paymentAmount.toLocaleString("en-IN")}
                 </button> */}
-                <button
+               <button
                   type="button"
                   onClick={() => {
                     console.log("Pay Now clicked:", upload);
                   }}
-                  disabled={!upload.final_price || Number(upload.final_price) <= 0}
-                  className="w-full px-4 py-3 bg-blue-700 text-white rounded-lg font-semibold transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-                >
-  Pay ₹{Number(upload.final_price || 0).toLocaleString("en-IN")}
+                  disabled={Number(upload.final_price ?? 0) <= 0}
+                  className="w-full px-4 py-3 bg-blue-700 text-white rounded-lg font-semibold transition-colors disabled:bg-gray-400"
+                >   
+  Pay ₹{Number(upload.final_price ?? 0).toLocaleString("en-IN")}
 </button>
 
                 <p className="text-xs text-gray-500 text-center mt-3">
