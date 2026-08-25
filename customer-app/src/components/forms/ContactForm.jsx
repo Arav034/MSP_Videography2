@@ -46,15 +46,11 @@ export default function ContactForm() {
         admin_notes: null,
       };
 
-      console.log("Contact Data:", contactData);
-
       await createContact(contactData);
 
       setSubmitted(true);
       setForm(INITIAL_STATE);
     } catch (error) {
-      console.error("Contact submission failed:", error);
-      alert("Failed to send your message. Please try again.");
     } finally {
       setSubmitting(false);
     }
