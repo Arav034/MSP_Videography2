@@ -51,6 +51,7 @@ export default function ContactForm() {
       setSubmitted(true);
       setForm(INITIAL_STATE);
     } catch (error) {
+      alert("Failed to send your message. Please try again.");
     } finally {
       setSubmitting(false);
     }
