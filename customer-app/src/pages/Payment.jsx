@@ -437,6 +437,7 @@ export default function Payment() {
                   "Upload payment clicked:",
                   upload
                 );
+                <Route path={ROUTES.HOME} element={<Home />} />
               }}
               disabled={Number(upload.final_price || 0) <= 0}
               className="w-full px-4 py-3 bg-blue-700 text-white rounded-lg font-semibold transition-colors hover:bg-blue-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
