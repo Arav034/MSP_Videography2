@@ -16,20 +16,14 @@ serve(async (req: Request) => {
     const { referenceNumber, type } = await req.json();
 
     if (!referenceNumber || !type) {
-      return new Response(
-        JSON.stringify({ error: "Missing referenceNumber or type" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Missing referenceNumber or type" }), { status: 400, headers: corsHeaders });
     }
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
 
     if (!supabaseUrl || !supabaseAnonKey) {
-      return new Response(
-        JSON.stringify({ error: "Supabase environment variables missing" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Missing env vars" }), { status: 500, headers: corsHeaders });
     }
 
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -45,10 +39,7 @@ serve(async (req: Request) => {
       );
 
       if (bookingError || !bookings || bookings.length === 0) {
-        return new Response(
-          JSON.stringify({ error: "Booking not found" }),
-          { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return new Response(JSON.stringify({ error: "Booking not found" }), { status: 404, headers: corsHeaders });
       }
 
       const booking = bookings[0];
@@ -65,10 +56,7 @@ serve(async (req: Request) => {
       );
 
       if (uploadError || !uploads || uploads.length === 0) {
-        return new Response(
-          JSON.stringify({ error: "Upload not found" }),
-          { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return new Response(JSON.stringify({ error: "Upload not found" }), { status: 404, headers: corsHeaders });
       }
 
       const upload = uploads[0];
@@ -79,68 +67,48 @@ serve(async (req: Request) => {
     }
 
     else {
-      return new Response(
-        JSON.stringify({ error: "Invalid type" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Invalid type" }), { status: 400, headers: corsHeaders });
     }
 
     if (!Number.isFinite(paymentAmount) || paymentAmount <= 0) {
-      return new Response(
-        JSON.stringify({ error: "Invalid payment amount" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Invalid amount" }), { status: 400, headers: corsHeaders });
     }
 
     if (paymentStatus === "Paid") {
-      return new Response(
-        JSON.stringify({ error: "Payment already completed" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Already paid" }), { status: 400, headers: corsHeaders });
     }
 
     const razorpayKeyId = Deno.env.get("RAZORPAY_KEY_ID");
     const razorpayKeySecret = Deno.env.get("RAZORPAY_KEY_SECRET");
 
     if (!razorpayKeyId || !razorpayKeySecret) {
-      return new Response(
-        JSON.stringify({ error: "Razorpay credentials not configured" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Missing Razorpay keys" }), { status: 500, headers: corsHeaders });
     }
 
     const credentials = `${razorpayKeyId}:${razorpayKeySecret}`;
     const encodedCredentials = btoa(credentials);
 
-    const razorpayOrderResponse = await fetch(
-      "https://api.razorpay.com/v1/orders",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Basic ${encodedCredentials}`,
+    const razorpayOrderResponse = await fetch("https://api.razorpay.com/v1/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${encodedCredentials}`,
+      },
+      body: JSON.stringify({
+        amount: Math.round(paymentAmount * 100),
+        currency: "INR",
+        receipt: referenceNumber.trim(),
+        notes: {
+          reference_number: referenceNumber.trim(),
+          type,
+          customer_name: customerName,
+          customer_email: customerEmail,
         },
-        body: JSON.stringify({
-          amount: Math.round(paymentAmount * 100),
-          currency: "INR",
-          receipt: referenceNumber.trim(),
-          notes: {
-            reference_number: referenceNumber.trim(),
-            type,
-            customer_name: customerName,
-            customer_email: customerEmail,
-          },
-        }),
-      }
-    );
+      }),
+    });
 
     if (!razorpayOrderResponse.ok) {
-      const errorData = await razorpayOrderResponse.text();
-      console.error("RAZORPAY ERROR:", errorData);
-      return new Response(
-        JSON.stringify({ error: "Failed to create Razorpay order" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Failed to create order" }), { status: 500, headers: corsHeaders });
     }
 
     const razorpayOrder = await razorpayOrderResponse.json();
@@ -156,16 +124,10 @@ serve(async (req: Request) => {
         reference_number: referenceNumber.trim(),
         type,
       }),
-      {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
+      { status: 200, headers: corsHeaders }
     );
   } catch (error) {
     console.error("ERROR:", error);
-    return new Response(
-      JSON.stringify({ error: "Internal server error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: "Internal error" }), { status: 500, headers: corsHeaders });
   }
 });
